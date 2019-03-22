@@ -11,6 +11,7 @@ export default {
   name: 'panel',
   methods: {
     jumpToDown(){
+      // https://play.google.com/store/apps/details?id=com.hijoy.raymanga&referrer=utm_source%3Dtry_reader%26utm_campaign%3D{bookid}
       location.href = 'http://baidu.com'
     }
   }
