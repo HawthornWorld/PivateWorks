@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="navbar-wrapper">
    
 
   </div>
@@ -15,6 +15,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
+@import '../assets/scss/common.scss';
 
 </style>

@@ -38,6 +38,7 @@ export default {
 
 <style>
 body {
+  -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
 }
 html,

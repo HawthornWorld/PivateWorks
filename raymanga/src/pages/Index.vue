@@ -13,8 +13,8 @@
       </div>
       <div class="summary">
         <span class="title">-INFO-</span>
-        <span class="cnt">{{bookInfo.summary}}</span>
-        <span class="btn" @click="getMore">-点击展开-</span>
+        <span :class="classList">{{bookInfo.summary}}</span>
+        <span class="btn-more" @click="getMore">-{{btnTxt}}-</span>
       </div>
 
     </div>
@@ -34,11 +34,13 @@ export default {
       bookId: util.getQuery('bookid'),
       chapterArr: [],
       bookInfo: {},
+      btnTxt: '点击展开',
+      classList: ['content'],
     };
   },
   async mounted() {
     await this.getBookInfo();
-    await this.getChapterList();
+    // await this.getChapterList();
   },
   methods: {
     getBookInfo() {
@@ -54,8 +56,6 @@ export default {
            * 2001  ：参数错误
            * 2002  ：数据库连接错误
            */
-          // let code = res.data.code;
-          // let data = res.data.bookInfo;
           const { code, bookInfo } = res.data;
           if (code === 1) {
             this.chapterArr = bookInfo.chapter_list;
@@ -69,32 +69,14 @@ export default {
           console.log(error);
         });
     },
-    getChapterList() {
-      this.$axios
-        .post('/getChapterDetail', {
-          book_id: parseInt(this.bookId),
-          chapter_id: 4432,
-        })
-        .then(res => {
-          /**
-           * 状态码
-           * 1     ：成功
-           * 2000  ：常规错误
-           * 2001  ：参数错误
-           * 2002  ：数据库连接错误
-           */
-          const { code, data } = res;
-          if (code === 1) {
-          } else if (code === 2001) {
-          } else if (code === 2000) {
-          } else if (code === 2002) {
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-    getMore() {},
+    /**
+     * 改变展开按钮文本及摘要内容高度
+     */
+    getMore() {
+      this.classList =
+        this.classList.indexOf('more') > -1 ? ['content'] : ['content', 'more'];
+      this.btnTxt = this.btnTxt == '点击展开' ? '点击收起' : '点击展开';
+    }
   },
   components: {
     BottomPanel,
@@ -184,11 +166,14 @@ export default {
       font-weight: bold;
       @include ellipsis(2);
     }
-    .cnt {
+    .content {
       font-size: rem(32px);
       @include ellipsis(3);
     }
-    .btn {
+    .content.more {
+      -webkit-line-clamp: 9999999;
+    }
+    .btn-more {
       font-size: rem(28px);
     }
   }

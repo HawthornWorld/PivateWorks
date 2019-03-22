@@ -1,6 +1,6 @@
 <template>
     <div class="chapter-wrapper">
-        <ul class="list">
+        <ul class="list" @click="jumpToChapter">
             <li v-for="(item,idx) in chapterArr" :id="item.chapter_id">
                 <img :src="`//img1.raymangaapp.com${item.img_url}`" alt="" />
                 <div class="name">Chapter {{item.chapter_name}}</div>
@@ -11,12 +11,27 @@
 </template>
 
 <script>
+import util from '../vendors/util.js';
+
 export default {
   name: 'list',
+  data() {
+    return {
+      bookId: util.getQuery('bookid'),
+    };
+  },
   props: {
     chapterArr: {
       type: Array,
       default: [],
+    },
+  },
+  methods: {
+    jumpToChapter(e) {
+      this.$router.push({
+        path: 'detail',
+        query: { bookid: this.bookId, chapterid: e.target.id },
+      });
     },
   },
 };
@@ -29,29 +44,28 @@ export default {
 .chapter-wrapper {
 }
 .list li {
-    height: rem(180px);
-    border-bottom: 1px solid #b2b2b2;
-    box-sizing: border-box;
+  height: rem(180px);
+  border-bottom: 1px solid #b2b2b2;
+  box-sizing: border-box;
 
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   img {
-      width: rem(422px);
+    width: rem(422px);
   }
   .name {
-      color: #575757;
-      font-weight: bold;
-      margin: 0 rem(40px);
+    color: #575757;
+    font-weight: bold;
+    margin: 0 rem(40px);
   }
   .label {
-      color:#15e480;
-      border: 1px solid #15e480;
-      font-size: rem(32px);
-      border-radius: 4px;
-      padding: rem(4px) rem(12px);
-      box-sizing: border-box;
-
+    color: #15e480;
+    border: 1px solid #15e480;
+    font-size: rem(32px);
+    border-radius: 4px;
+    padding: rem(4px) rem(12px);
+    box-sizing: border-box;
   }
 }
 </style>
