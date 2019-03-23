@@ -1,17 +1,17 @@
 <template>
   <div class="detail-wrapper">
     <NavBar :chapterNum="currChapternum"></NavBar>
-    <div class="page-list">
-      <transition name="fade">
+    <transition name="fade">
+      <div class="page-list" id="container">
         <ul class="list">
           <li v-for="(item,idx) in pageList" :key="idx">
-            <img :src="`//img1.raymangaapp.com${item.image_url}`" alt="">
+            <img :src="`//img1.raymangaapp.com${item.image_url}`" v-lazy="`//img1.raymangaapp.com${item.image_url}`" alt="">
           </li>
         </ul>
-      </transition>
-    </div>
-    <ChapterStar></ChapterStar>
-    <BottomPanel class="download"></BottomPanel>
+      </div>
+    </transition>
+    <ChapterStar :userLang="userLang"></ChapterStar>
+    <BottomPanel class="download" :userLang="userLang"></BottomPanel>
     <div class="toggle-chapter">
       <span class="prev" @click="prevChapter"></span>
       <span class="num">Ch.{{currChapternum}}</span>
@@ -23,6 +23,7 @@
 
 <script>
 import util from '../vendors/util.js';
+import lang from '../vendors/lang.js';
 import ChapterStar from '../components/ChapterStar.vue';
 import BottomPanel from '../components/BottomPanel.vue';
 import NavBar from '../components/NavBar.vue';
@@ -35,6 +36,7 @@ export default {
       bookid: parseInt(util.getQuery('bookid')),
       chapterNum: parseInt(util.getQuery('chapternum')),
       pageList: [],
+      userLang: {},
     };
   },
   computed: {
@@ -43,11 +45,23 @@ export default {
     },
   },
   created() {
+    
     // this.chapterid = this.$route.query.chapterid;
     // this.bookId = this.$route.query.bookid;
     this.getChapterList();
+    //获取用户设备语言 包含常规浏览器和ie浏览器
+    let langKey = (navigator.language || navigator.userLanguage).slice(0,2);
+    //切换ui至相应语言
+    this.userLang = lang[langKey]
   },
-  mounted() {},
+  mounted() {
+    // img[lazy=loading] = {
+    //   width: '40px',
+    //   height: '300px',
+    //   margin: auto
+    // }
+    this.isShow = true;
+  },
   methods: {
     /**
      * 获取章节详情
@@ -162,15 +176,17 @@ export default {
     background: url(#{$base}/ic_reader_navigation_next.png) center center
       no-repeat/100%;
   }
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.5s;
-    transform: translateY(50%);
-  }
-  .fade-enter,
-  .fade-leave-active {
-    opacity: 0;
-    transform: translateY(0);
-  }
 }
+// .fade-enter-active,
+// .fade-leave-active {
+//   transition: opacity .5s;
+// }
+
+// .fade-enter,
+// .fade-leave-to
+// /* .scalein-leave-active below version 2.1.8 */
+
+//  {
+//   opacity: 0;
+// }
 </style>

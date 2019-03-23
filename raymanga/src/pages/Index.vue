@@ -6,6 +6,10 @@
           <img class="cover-img" :src="`//img1.raymangaapp.com${bookInfo.cover_url}`" alt="">
           <span></span>
         </div>
+        <div class="share">
+          <span class="i-share"></span>
+          <span>share</span>
+        </div>
         <div class="cover-title">
           <div class="title">{{bookInfo.book_name}}</div>
           <div class="author">{{bookInfo.author}}</div>
@@ -19,11 +23,12 @@
 
     </div>
     <chapterList :chapterArr="chapterArr"></chapterList>
-    <BottomPanel></BottomPanel>
+    <BottomPanel :userLang="userLang"></BottomPanel>
   </div>
 </template>
 
 <script>
+import lang from '../vendors/lang.js';
 import util from '../vendors/util.js';
 import BottomPanel from '../components/BottomPanel.vue';
 import chapterList from '../components/ChapterList.vue';
@@ -34,17 +39,33 @@ export default {
       bookId: util.getQuery('bookid'),
       chapterArr: [],
       bookInfo: {},
-      btnTxt: '点击展开',
+      // btnTxt: this.userLang.btn,
       classList: ['content'],
+      userLang: {},
+      btnTxtTemp: '',
+      // maxNum: 0
     };
+  },
+  computed: {
+    btnTxt() {
+      return this.btnTxtTemp;
+    },
   },
   async mounted() {
     await this.getBookInfo();
-    // await this.getChapterList();
+    //获取用户设备语言 包含常规浏览器和ie浏览器
+    let langKey = (navigator.language || navigator.userLanguage).slice(0, 2);
+    //切换ui至相应语言
+    this.userLang = lang[langKey];
+    this.btnTxtTemp = this.userLang.btnOpen;
   },
   methods: {
+    /**
+     * 获取对应bookid书籍信息
+     */
     getBookInfo() {
-      const getBookInfo = '//previewapi.raymangaapp.com/previewapi/v1/common/getBookInfo'
+      const getBookInfo =
+        '//previewapi.raymangaapp.com/previewapi/v1/common/getBookInfo';
       this.$axios
         .post(getBookInfo, {
           book_id: this.bookId,
@@ -61,6 +82,8 @@ export default {
           if (code === 1) {
             this.chapterArr = bookInfo.chapter_list;
             this.bookInfo = bookInfo.book_info;
+            // 本书章节最大数
+            // this.maxNum = this.chapterArr[this.chapterArr.length-1].chapter_number
           } else if (code === 2000) {
             this.$toast('常规错误(2000)');
           } else if (code === 2001) {
@@ -70,7 +93,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+            this.$toast('网络繁忙，请稍后再试');
         });
     },
     /**
@@ -78,8 +101,11 @@ export default {
      */
     getMore() {
       this.classList =
-        this.classList.indexOf('more') > -1 ? ['content'] : ['content', 'more'];
-      this.btnTxt = this.btnTxt == '点击展开' ? '点击收起' : '点击展开';
+      this.classList.indexOf('more') > -1 ? ['content'] : ['content', 'more']
+      this.btnTxtTemp =
+        this.btnTxtTemp == this.userLang.btnOpen
+          ? this.userLang.btnClose
+          : this.userLang.btnOpen;
     },
   },
   components: {
@@ -179,6 +205,25 @@ export default {
     }
     .btn-more {
       font-size: rem(28px);
+    }
+  }
+  .share {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto;
+    color: #fff;
+
+    position: absolute;
+    top: rem(30px);
+    right: rem(40px);
+    .i-share {
+      display: inline-block;
+      width: rem(64px);
+      height: rem(64px);
+      font-size: rem(24px);
+      background: url(#{$base}/ic_reader_navigation_share_white.png) center
+        center no-repeat/100%;
     }
   }
 }

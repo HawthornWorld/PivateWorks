@@ -1,7 +1,7 @@
 <template>
   <div class="panel-wrapper">
     <span class="ad">AD</span>
-    <span class="cnt">打开APP,免费看超多精彩漫画</span>
+    <span class="cnt">{{userLang.ad}}</span>
     <span class="down" @click="jumpToDown">DOWNLOAD</span>
   </div>
 </template>
@@ -10,16 +10,24 @@
 import util from '../vendors/util.js';
 export default {
   name: 'panel',
-  data(){
+  data() {
     return {
-      bookId: util.getQuery('bookid')
-    }
+      bookId: util.getQuery('bookid'),
+    };
+  },
+  props: {
+    userLang: {
+      type: Object,
+      default: {},
+    },
   },
   methods: {
-    jumpToDown(){
-      location.href = `https://play.google.com/store/apps/details?id=com.hijoy.raymanga&referrer=utm_source%3Dtry_reader%26utm_campaign%3D${this.bookId}`
-    }
-  }
+    jumpToDown() {
+      location.href = `https://play.google.com/store/apps/details?id=com.hijoy.raymanga&referrer=utm_source%3Dtry_reader%26utm_campaign%3D${
+        this.bookId
+      }`;
+    },
+  },
 };
 </script>
 
@@ -62,6 +70,5 @@ export default {
   border-radius: rem(50px);
   box-sizing: border-box;
   margin-left: auto;
-
 }
 </style>

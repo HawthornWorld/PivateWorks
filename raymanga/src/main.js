@@ -3,9 +3,9 @@ import App from './App.vue'
 import router from './router/index'
 import axios from 'axios'
 import 'mint-ui/lib/style.css'
-import { Toast } from 'mint-ui'
+import { Toast, Lazyload } from 'mint-ui'
 
-// Vue.use(Router)
+Vue.use(Lazyload);
 
 // import 'core-js/fn/object'
 // import 'core-js/fn/array'

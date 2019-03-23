@@ -1,7 +1,7 @@
 <template>
   <div class="star-wrapper">
-    <div class="title">谢谢观赏！</div>
-    <div class="desc">本漫画还在试阅阶段,请花费一点时间为这本漫画打个分,这将影响这本漫画后续更新计划.</div>
+    <div class="title">{{userLang.starTitle}}</div>
+    <div class="desc">{{userLang.starSubTitle}}</div>
     <div class="star">
       <ul class="list">
         <li v-for="(item,idx) in starObj">
@@ -14,7 +14,7 @@
       <textarea type="text" rows="4" :placeholder="placeHolder" v-model.trim="comment" @keyup.stop="getInput">
       </textarea>
     </div>
-    <div class="submit" @click="submitHandle">提交评分</div>
+    <div class="submit" @click="submitHandle">{{userLang.submitBtn}}</div>
   </div>
 </template>
 
@@ -30,22 +30,28 @@ export default {
       userScore: 0,
       comment: '',
       cookieId: '',
-      placeHolder: '此处填写您对本漫画的任何意见,ps:翻译好烂哦,画面太糟糕了',
+      placeHolder: this.userLang.starCnt,
       starObj: [
         {
-          txt: '一般',
+          txt: this.userLang.starC,
           score: 1,
         },
         {
-          txt: '不错',
+          txt: this.userLang.starB,
           score: 2,
         },
         {
-          txt: '精彩',
+          txt: this.userLang.starA,
           score: 3,
         },
       ],
     };
+  },
+  props: {
+    userLang: {
+      type: Object,
+      default: {}
+    }
   },
   mounted() {
     //判断cookie中是否有uuid，若无，则写入
