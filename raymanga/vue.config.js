@@ -21,43 +21,43 @@ module.exports = {
       'Access-Control-Allow-Headers': 'Content-Type'
     },
     https: false,
-    proxy: {
-      '/getBookInfo': {
-        target:
-          'http://previewapi.raymangaapp.com/previewapi/v1/common/getBookInfo',
-        ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/getBookInfo': '/'
-        }
-      },
-      '/getChapterDetail': {
-        target:
-          'http://previewapi.raymangaapp.com/previewapi/v1/common/getChapterDetail',
-        ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/getChapterDetail': '/'
-        }
-      },
-      '/markBook': {
-        target:
-          'http://previewapi.raymangaapp.com/previewapi/v1/common/markBook',
-        ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/markBook': '/'
-        }
-      },
-      '/uploadEvent': {
-        target:
-          'http://previewapi.raymangaapp.com/previewapi/v1/common/uploadEvent',
-        ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/uploadEvent': '/'
-        }
-      }
-    }
+    // proxy: {
+    //   '/getBookInfo': {
+    //     target:
+    //       'http://previewapi.raymangaapp.com/previewapi/v1/common/getBookInfo',
+    //     ws: true,
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       '^/getBookInfo': '/'
+    //     }
+    //   },
+    //   '/getChapterDetail': {
+    //     target:
+    //       'http://previewapi.raymangaapp.com/previewapi/v1/common/getChapterDetail',
+    //     ws: true,
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       '^/getChapterDetail': '/'
+    //     }
+    //   },
+    //   '/markBook': {
+    //     target:
+    //       'http://previewapi.raymangaapp.com/previewapi/v1/common/markBook',
+    //     ws: true,
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       '^/markBook': '/'
+    //     }
+    //   },
+    //   '/uploadEvent': {
+    //     target:
+    //       'http://previewapi.raymangaapp.com/previewapi/v1/common/uploadEvent',
+    //     ws: true,
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       '^/uploadEvent': '/'
+    //     }
+    //   }
+    // }
   }
 }

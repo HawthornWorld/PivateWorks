@@ -11,7 +11,7 @@
       </ul>
     </div>
     <div class="text">
-      <textarea type="text" rows="4" placeholder="此处填写您对本漫画的任何意见,ps:翻译好烂哦,画面太糟糕了" v-model.trim="comment" @keyup.stop="getInput">
+      <textarea type="text" rows="4" :placeholder="placeHolder" v-model.trim="comment" @keyup.stop="getInput">
       </textarea>
     </div>
     <div class="submit" @click="submitHandle">提交评分</div>
@@ -30,6 +30,7 @@ export default {
       userScore: 0,
       comment: '',
       cookieId: '',
+      placeHolder: '此处填写您对本漫画的任何意见,ps:翻译好烂哦,画面太糟糕了',
       starObj: [
         {
           txt: '一般',
@@ -45,6 +46,14 @@ export default {
         },
       ],
     };
+  },
+  mounted() {
+    //判断cookie中是否有uuid，若无，则写入
+    this.cookieId = this.getCookie('uuid');
+    if (!this.cookieId) {
+      this.cookieId = this.generateUid();
+      this.setCookie('uuid', this.cookieId, 365);
+    }
   },
   methods: {
     starHandle(e) {
@@ -68,22 +77,33 @@ export default {
      * 获取cookie标识
      */
     getCookie(name) {
-      let arr = [],
+      let arr,
         reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)');
       if ((arr = document.cookie.match(reg))) {
-        return true;
+        return unescape(arr[2]);
       } else {
-        return false;
+        return ''
       }
     },
     setCookie(name, value, expiredays) {
       var exdate = new Date();
       exdate.setDate(exdate.getDate() + expiredays);
       document.cookie =
-        c_name +
+        name +
         '=' +
         escape(value) +
         (expiredays == null ? '' : ';expires=' + exdate.toGMTString());
+    },
+    /**
+     * 随机生成无重复字符串
+     */
+    generateUid() {
+      let s = () => {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+      };
+      return (
+        s() + s() + '-' + s() + '-' + s() + '-' + s() + '-' + s() + s() + s()
+      );
     },
     /**
      * 提交评分和评论
@@ -102,8 +122,11 @@ export default {
      * 提交评分和评论
      */
     submitStar() {
+      
+      const markBook =
+        '//previewapi.raymangaapp.com/previewapi/v1/common/markBook';
       this.$axios
-        .post('/markBook', {
+        .post(markBook, {
           cookie_id: this.cookieId,
           chapter_id: parseInt(this.chapterId),
           score: this.userScore,
@@ -117,9 +140,9 @@ export default {
            * 2001  ：参数错误
            * 2002  ：数据库连接错误
            */
-          const { code, pageList } = res.data;
+          const { code } = res.data;
           if (code === 1) {
-            this.pageList = pageList;
+            this.$toast('提交成功')
           } else if (code === 2000) {
             this.$toast('常规错误(2000)');
           } else if (code === 2001) {

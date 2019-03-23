@@ -1,13 +1,13 @@
 <template>
-    <div class="chapter-wrapper">
-        <ul class="list" @click="jumpToChapter">
-            <li v-for="(item,idx) in chapterArr" :id="item.chapter_id">
-                <img :src="`//img1.raymangaapp.com${item.img_url}`" alt="" />
-                <div class="name">Chapter {{item.chapter_name}}</div>
-                <div class="label">GRATIS</div>
-            </li>
-        </ul>
-    </div>
+  <div class="chapter-wrapper">
+    <ul class="list">
+      <li v-for="(item,idx) in chapterArr" :id="item.chapter_id" :data-num="item.chapter_number" @click="jumpToChapter">
+        <img :src="`//img1.raymangaapp.com${item.img_url}`" alt="" />
+        <div class="name">Chapter {{item.chapter_name}}</div>
+        <div class="label">GRATIS</div>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -28,9 +28,14 @@ export default {
   },
   methods: {
     jumpToChapter(e) {
+      console.log('====',e.target)
       this.$router.push({
         path: 'detail',
-        query: { bookid: this.bookId, chapterid: e.target.id },
+        query: {
+          bookid: this.bookId,
+          chapterid: e.currentTarget.id,
+          chapternum: e.currentTarget.dataset.num
+        },
       });
     },
   },

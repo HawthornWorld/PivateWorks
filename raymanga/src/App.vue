@@ -37,6 +37,9 @@ export default {
 </script>
 
 <style>
+#app {
+  height: 100%;
+}
 body {
   -webkit-overflow-scrolling: touch;
   overflow-x: hidden;

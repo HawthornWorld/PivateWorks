@@ -12,7 +12,7 @@ const routes = [
   },
   {
     path: '*',
-    name: 'index',
+    name: '*',
     component: () => import('../pages/Index.vue')
   },
   {

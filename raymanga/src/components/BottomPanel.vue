@@ -7,12 +7,17 @@
 </template>
 
 <script>
+import util from '../vendors/util.js';
 export default {
   name: 'panel',
+  data(){
+    return {
+      bookId: util.getQuery('bookid')
+    }
+  },
   methods: {
     jumpToDown(){
-      // https://play.google.com/store/apps/details?id=com.hijoy.raymanga&referrer=utm_source%3Dtry_reader%26utm_campaign%3D{bookid}
-      location.href = 'http://baidu.com'
+      location.href = `https://play.google.com/store/apps/details?id=com.hijoy.raymanga&referrer=utm_source%3Dtry_reader%26utm_campaign%3D${this.bookId}`
     }
   }
 };

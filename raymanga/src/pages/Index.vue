@@ -44,8 +44,9 @@ export default {
   },
   methods: {
     getBookInfo() {
+      const getBookInfo = '//previewapi.raymangaapp.com/previewapi/v1/common/getBookInfo'
       this.$axios
-        .post('/getBookInfo', {
+        .post(getBookInfo, {
           book_id: this.bookId,
         })
         .then(res => {
@@ -60,9 +61,12 @@ export default {
           if (code === 1) {
             this.chapterArr = bookInfo.chapter_list;
             this.bookInfo = bookInfo.book_info;
-          } else if (code === 2001) {
           } else if (code === 2000) {
+            this.$toast('常规错误(2000)');
+          } else if (code === 2001) {
+            this.$toast('参数错误(2001)');
           } else if (code === 2002) {
+            this.$toast('数据库连接错误(2002)');
           }
         })
         .catch(error => {
@@ -76,7 +80,7 @@ export default {
       this.classList =
         this.classList.indexOf('more') > -1 ? ['content'] : ['content', 'more'];
       this.btnTxt = this.btnTxt == '点击展开' ? '点击收起' : '点击展开';
-    }
+    },
   },
   components: {
     BottomPanel,
