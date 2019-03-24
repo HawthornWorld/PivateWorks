@@ -45,24 +45,43 @@ export default {
     },
   },
   created() {
-    
-    // this.chapterid = this.$route.query.chapterid;
-    // this.bookId = this.$route.query.bookid;
     this.getChapterList();
     //获取用户设备语言 包含常规浏览器和ie浏览器
-    let langKey = (navigator.language || navigator.userLanguage).slice(0,2);
+    let langKey = (navigator.language || navigator.userLanguage).slice(0, 2);
     //切换ui至相应语言
-    this.userLang = lang[langKey]
+    this.userLang = lang[langKey];
   },
   mounted() {
-    // img[lazy=loading] = {
-    //   width: '40px',
-    //   height: '300px',
-    //   margin: auto
-    // }
-    this.isShow = true;
+    // 调用统计章节pv函数
+    this.detailPvHandle();
+    //调用页面滚动事件
+    window.addEventListener('scroll', this.handleScroll);
   },
   methods: {
+    /**
+     * 统计阅读页pv函数,章节id可从链接获取,ChapterStar.vue有获取cookie uuid工具函数
+     */
+    detailPvHandle() {
+      console.log('detail pv');
+    },
+    /**
+     * 统计完成章节阅读用户
+     */
+    chapterDoneHandle() {
+      console.log('chapter done');
+    },
+    handleScroll() {
+      //判断页面是否拉到底部
+      let scrollDom = document.getElementById('container');
+      let distance =
+        scrollDom.offsetHeight -
+        scrollDom.scrollTop -
+        document.body.clientHeight;
+      if (distance < 400) {
+        // 在距离底部400px之内,调用统计完成章节阅读用户函数
+        this.chapterDoneHandle();
+      }
+    },
     /**
      * 获取章节详情
      */

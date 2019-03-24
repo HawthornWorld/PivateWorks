@@ -2,29 +2,41 @@
   <div class="navbar-wrapper">
     <span class="back" @click="back"></span>
     <span class="chapter-name">Chapter {{chapterNum}}</span>
-    <div class="share">
+    <div class="share" @click="popShareMask">
       <span class="i-share"></span>
       <span>share</span>
     </div>
+    <shareMask :isMaskShow="isShow" @popShareMask="popShareMask"></shareMask>
   </div>
 </template>
 
 <script>
 import util from '../vendors/util.js';
+import shareMask from '../components/shareMask.vue';
 
 export default {
   name: 'navbar',
   data() {
     return {
+      isShow: false,
       // chapterNum: util.getQuery('chapternum'),
     };
   },
   props: ['chapterNum'],
   methods: {
     back() {
-      this.$router.go(-1)
-    }
-  }
+      this.$router.go(-1);
+    },
+    /**
+     * 点击分享按钮弹出选择平台浮层
+     */
+    popShareMask() {
+      this.isShow = !this.isShow;
+    },
+  },
+  components: {
+    shareMask,
+  },
 };
 </script>
 
@@ -33,6 +45,7 @@ export default {
 @import '../assets/scss/common.scss';
 .navbar-wrapper {
   position: fixed;
+  z-index: 9;
   top: 0;
   width: 100%;
   height: rem(160px);

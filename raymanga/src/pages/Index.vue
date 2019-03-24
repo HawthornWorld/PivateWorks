@@ -6,7 +6,7 @@
           <img class="cover-img" :src="`//img1.raymangaapp.com${bookInfo.cover_url}`" alt="">
           <span></span>
         </div>
-        <div class="share">
+        <div class="share" @click="popShareMask">
           <span class="i-share"></span>
           <span>share</span>
         </div>
@@ -24,6 +24,7 @@
     </div>
     <chapterList :chapterArr="chapterArr"></chapterList>
     <BottomPanel :userLang="userLang"></BottomPanel>
+    <shareMask :isMaskShow="isShow" @popShareMask="popShareMask"></shareMask>
   </div>
 </template>
 
@@ -32,6 +33,8 @@ import lang from '../vendors/lang.js';
 import util from '../vendors/util.js';
 import BottomPanel from '../components/BottomPanel.vue';
 import chapterList from '../components/ChapterList.vue';
+import shareMask from '../components/shareMask.vue';
+
 export default {
   name: 'index',
   data() {
@@ -44,6 +47,7 @@ export default {
       userLang: {},
       btnTxtTemp: '',
       // maxNum: 0
+      isShow: false,
     };
   },
   computed: {
@@ -58,8 +62,17 @@ export default {
     //切换ui至相应语言
     this.userLang = lang[langKey];
     this.btnTxtTemp = this.userLang.btnOpen;
+
+    //调用统计首页pv函数
+    this.indexPvHandle()
   },
   methods: {
+    /**  
+     * 统计首页pv函数,id可从链接获取,ChapterStar.vue有获取cookie uuid工具函数
+    */
+    indexPvHandle(){
+      console.log('index pv')
+    },
     /**
      * 获取对应bookid书籍信息
      */
@@ -93,7 +106,7 @@ export default {
           }
         })
         .catch(error => {
-            this.$toast('网络繁忙，请稍后再试');
+          this.$toast('网络繁忙，请稍后再试');
         });
     },
     /**
@@ -101,16 +114,23 @@ export default {
      */
     getMore() {
       this.classList =
-      this.classList.indexOf('more') > -1 ? ['content'] : ['content', 'more']
+        this.classList.indexOf('more') > -1 ? ['content'] : ['content', 'more'];
       this.btnTxtTemp =
         this.btnTxtTemp == this.userLang.btnOpen
           ? this.userLang.btnClose
           : this.userLang.btnOpen;
     },
+    /**
+     * 点击分享按钮弹出选择平台浮层
+     */
+    popShareMask() {
+      this.isShow = !this.isShow;
+    },
   },
   components: {
     BottomPanel,
     chapterList,
+    shareMask,
   },
 };
 </script>
