@@ -1,8 +1,8 @@
 <template>
   <div class="detail-wrapper">
-    <NavBar :chapterNum="currChapternum"></NavBar>
+    <NavBar :chapterNum="chapterNum"></NavBar>
     <transition name="fade">
-      <div class="page-list" id="container">
+      <div class="page-list" ref="container">
         <ul class="list">
           <li v-for="(item,idx) in pageList" :key="idx">
             <img :src="`//img1.raymangaapp.com${item.image_url}`" v-lazy="`//img1.raymangaapp.com${item.image_url}`" alt="">
@@ -14,7 +14,7 @@
     <BottomPanel class="download" :userLang="userLang"></BottomPanel>
     <div class="toggle-chapter">
       <span class="prev" @click="prevChapter"></span>
-      <span class="num">Ch.{{currChapternum}}</span>
+      <span class="num">Ch.{{chapterNum}}</span>
       <span class="next" @click="nextChapter"></span>
     </div>
 
@@ -34,18 +34,21 @@ export default {
     return {
       chapterid: parseInt(util.getQuery('chapterid')),
       bookid: parseInt(util.getQuery('bookid')),
-      chapterNum: parseInt(util.getQuery('chapternum')),
+      chapterNum: parseInt(util.getQuery('chapternum')) + 1,
       pageList: [],
       userLang: {},
+      chapterIdArr: [],
+      chapterNumArr: [],
     };
   },
-  computed: {
-    currChapternum() {
-      return parseInt(this.chapterNum) + 1;
-    },
-  },
+  // computed: {
+  //   currChapternum() {
+  //     return parseInt(this.chapterNum) + 1;
+  //   },
+  // },
   created() {
     this.getChapterList();
+    this.getBookInfo();
     //获取用户设备语言 包含常规浏览器和ie浏览器
     let langKey = (navigator.language || navigator.userLanguage).slice(0, 2);
     //切换ui至相应语言
@@ -57,8 +60,8 @@ export default {
     dom.style.width = document.body.clientWidth + 'px';
     // 调用统计章节pv函数
     this.detailPvHandle();
-    //调用页面滚动事件
-    window.addEventListener('scroll', this.handleScroll);
+
+    window.addEventListener('scroll', this.handleScroll, true);
   },
   methods: {
     /**
@@ -75,12 +78,12 @@ export default {
     },
     handleScroll() {
       //判断页面是否拉到底部
-      let scrollDom = document.getElementById('container');
+      let scrollDom = this.$refs.container;
       let distance =
-        scrollDom.offsetHeight -
-        scrollDom.scrollTop -
+        scrollDom.scrollHeight -
+        document.body.scrollTop -
         document.body.clientHeight;
-      if (distance < 400) {
+      if (distance < 700) {
         // 在距离底部400px之内,调用统计完成章节阅读用户函数
         this.chapterDoneHandle();
       }
@@ -121,22 +124,56 @@ export default {
         });
     },
     /**
+     * 获取chapterid arr
+     */
+    getBookInfo() {
+      const getBookInfo =
+        '//previewapi.raymangaapp.com/previewapi/v1/common/getBookInfo';
+      this.$axios
+        .post(getBookInfo, {
+          book_id: this.bookid,
+        })
+        .then(res => {
+          const { code, bookInfo } = res.data;
+          if (code === 1) {
+            // 本书章节id数组
+            bookInfo.chapter_list.forEach(item => {
+              this.chapterIdArr.push(item.chapter_id);
+              this.chapterNumArr.push(item.chapter_number);
+            });
+            console.log(this.chapterNumArr);
+          }
+        })
+        .catch(error => {
+          this.$toast('网络繁忙，请稍后再试');
+        });
+    },
+    /**
      * 切换章节
      */
 
     prevChapter() {
-      if (this.chapterNum === 0) return;
-      this.chapterid -= 1;
-      this.chapterNum -= 1;
+      let currChapterIdx = this.chapterIdArr.indexOf(this.chapterid);
+      if (currChapterIdx === 0) return;
+      //按章节ID切换章节
+      this.chapterid = this.chapterIdArr[currChapterIdx - 1];
+      this.chapterNum = this.chapterNumArr[currChapterIdx - 1]+ 1;
       this.getChapterList();
       //切换章节时滚动视口到顶部
       document.body.scrollTop = 0;
     },
     nextChapter() {
-      this.chapterid += 1;
-      this.chapterNum += 1;
+      let currChapterIdx = this.chapterIdArr.indexOf(this.chapterid);
+      let chapterLen = this.chapterIdArr.length;
+      if (currChapterIdx >= chapterLen - 1) return;
+
+      this.chapterid = this.chapterIdArr[currChapterIdx + 1];
+      this.chapterNum = this.chapterNumArr[currChapterIdx + 1] + 1;
       this.getChapterList();
       document.body.scrollTop = 0;
+
+      // this.chapterid += 1;
+      // this.chapterNum += 1;
     },
   },
   components: {
@@ -158,6 +195,7 @@ export default {
   width: 100%;
   img {
     width: 100%;
+    display: block;
   }
 }
 .download {
