@@ -39,6 +39,7 @@ export default {
       userLang: {},
       chapterIdArr: [],
       chapterNumArr: [],
+      isToBottom: false
     };
   },
   // computed: {
@@ -83,9 +84,11 @@ export default {
         scrollDom.scrollHeight -
         document.body.scrollTop -
         document.body.clientHeight;
-      if (distance < 700) {
+      if (distance < 700 && !this.isToBottom) {
         // 在距离底部400px之内,调用统计完成章节阅读用户函数
         this.chapterDoneHandle();
+        console.log(new Date())
+        this.isToBottom = true
       }
     },
     /**
@@ -171,9 +174,6 @@ export default {
       this.chapterNum = this.chapterNumArr[currChapterIdx + 1] + 1;
       this.getChapterList();
       document.body.scrollTop = 0;
-
-      // this.chapterid += 1;
-      // this.chapterNum += 1;
     },
   },
   components: {
