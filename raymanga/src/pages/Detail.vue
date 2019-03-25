@@ -52,6 +52,9 @@ export default {
     this.userLang = lang[langKey];
   },
   mounted() {
+    //动态设置fixed元素的宽度
+    let dom = document.getElementsByClassName('toggle-chapter')[0];
+    dom.style.width = document.body.clientWidth + 'px';
     // 调用统计章节pv函数
     this.detailPvHandle();
     //调用页面滚动事件

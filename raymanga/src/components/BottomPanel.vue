@@ -15,6 +15,11 @@ export default {
       bookId: util.getQuery('bookid'),
     };
   },
+  mounted() {
+    let dom = document.getElementsByClassName('panel-wrapper')[0]
+    dom.style.width =
+      document.body.clientWidth + 'px';
+  },
   props: {
     userLang: {
       type: Object,
@@ -37,7 +42,7 @@ export default {
 .panel-wrapper {
   position: fixed;
   bottom: 0;
-  width: 100%;
+  // width: rem(1080px);
   height: rem(140px);
   background: #f4f4f4;
   border-top: 1px solid #b2b2b2;

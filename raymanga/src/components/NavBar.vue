@@ -23,6 +23,11 @@ export default {
     };
   },
   props: ['chapterNum'],
+  mounted() {
+    //动态设置fixed元素的宽度
+    let dom = document.getElementsByClassName('navbar-wrapper')[0];
+    dom.style.width = document.body.clientWidth + 'px';
+  },
   methods: {
     back() {
       this.$router.go(-1);
@@ -47,11 +52,11 @@ export default {
   position: fixed;
   z-index: 9;
   top: 0;
+  left: 0;
   width: 100%;
   height: rem(160px);
   background: #f4f4f4;
   color: #7e7e7e;
-  padding: 0 rem(40px);
   box-sizing: border-box;
 
   display: flex;
@@ -63,6 +68,7 @@ export default {
     height: rem(64px);
     background: url(#{$base}/ic_reader_navigation_back.png) center center
       no-repeat/100%;
+    margin-left: rem(40px);
   }
   .chapter-name {
     font-size: rem(48px);
@@ -73,7 +79,10 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-left: auto;
+    text-align: right;
+    // margin-left: auto;
+    margin-left: rem(530px);
+
     .i-share {
       display: inline-block;
       width: rem(64px);

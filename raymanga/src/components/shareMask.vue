@@ -1,15 +1,15 @@
 <template>
-    <div class="share-wrapper" v-show="isMaskShow">
-        <div class="mask" @click="closeMask"></div>
-        <div class="cnt">
-            <ul>
-                <li class="logo1" @click="setShare"></li>
-                <li class="logo2"></li>
-                <li class="logo3"></li>
-                <li class="logo4"></li>
-            </ul>
-        </div>
+  <div class="share-wrapper" v-show="isMaskShow">
+    <div class="mask" @click="closeMask"></div>
+    <div class="cnt">
+      <ul>
+        <li class="logo1" @click="setShare"></li>
+        <li class="logo2"></li>
+        <li class="logo3"></li>
+        <li class="logo4"></li>
+      </ul>
     </div>
+  </div>
 </template>
 <script>
 // const BASE_URL = '../assets/images'
@@ -27,13 +27,18 @@ export default {
       default: false,
     },
   },
+  mounted() {
+    //动态设置fixed元素的宽度
+    let dom = document.getElementsByClassName('share-wrapper')[0];
+    dom.style.width = document.body.clientWidth + 'px';
+  },
   methods: {
     /**
      * 设置分享
      */
     setShare() {
       //调用平台分享api
-      console.log('success')
+      console.log('success');
     },
     closeMask() {
       this.$emit('popShareMask');
@@ -46,10 +51,11 @@ export default {
 .share-wrapper {
   position: fixed;
   z-index: 999;
-  left: 0;
-  bottom: 0;
+  top: 0;
   width: 100%;
   height: 100%;
+  // margin: 0 auto;
+  text-align: left;
   display: flex;
   flex-direction: row;
   align-items: center;
