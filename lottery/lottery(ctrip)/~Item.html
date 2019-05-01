@@ -1,0 +1,12 @@
+<tbody>
+    <%_.each(prizeList, function(row) {%>
+    <tr>
+        <% _.each(row, function(item, index){ %>
+            <td class="<%=item.className%>" data-code="<%=item.code%>" data-idx="<%=item.idx%>" id="mktact_lottery_item_<%=item.idx%>">
+                <img class="" src="<%=item.imgurl%>">
+                <p><%=item.name%></p>
+            </td>
+        <%})%>
+    </tr>
+    <%})%>
+</tbody>

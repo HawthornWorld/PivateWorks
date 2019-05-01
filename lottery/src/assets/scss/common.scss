@@ -1,0 +1,17 @@
+@function rem($px) {
+    @return $px / 300px * 1rem;
+  }
+  
+  @mixin ellipsis($line:1) {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: $line;
+    /* autoprefixer: off */
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+}
+
+$base: "../../src/assets/images";
+
+// $base: "//xxx.com/raymanga/images" //线上图片路径

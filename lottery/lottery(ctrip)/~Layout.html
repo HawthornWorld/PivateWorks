@@ -1,0 +1,41 @@
+<div id="component_<%=componentId%>" class="wrap lottery">
+    <div id="container_<%=componentId%>">
+        <p class="chance J_chance">您剩余<em>1</em>次抽奖机会</p>
+        <%if (isPrizeBtn) {%>
+        <p class="btn-prize J_prize" id="mktact_lottery_myprize"><span>我的奖品</span></p>
+        <%}%>
+        <table class="tbl J_tbl"></table>
+        <div class="m-prize J_prize_list"></div>
+    </div>
+    <div id="warn_<%=componentId%>" class="warning">您来晚啦，活动已结束啦！</div>
+    <style>
+        #component_<%=componentId%>.wrap.lottery {
+            background-color: <%=lotteryBgColor%>;
+            background-image: url(<%=lotteryBgImage%>);
+        }
+        #component_<%=componentId%>.wrap.lottery .chance {
+            color: <%=chanceFontColor%>;
+            background-color: <%=chanceBgColor%>;
+        }
+        #component_<%=componentId%>.wrap.lottery .tbl {
+            border-spacing: <%=tblBorderSpace%>;
+            background-color: <%=tblBgColor%>;
+            background-image: url(<%=tblBgImage%>);
+        }
+        #component_<%=componentId%>.wrap.lottery .tbl td:not(.btn-draw) {
+            box-shadow: <%=tblItemShadow%>;
+            color: <%=tblItemFontColor%>;
+            background-color: <%=tblItemBgColor%>;
+        }
+    </style>
+    <!-- 滑块验证 -->
+    <div class="m-slider J_slide_wrap" id="lty_container_<%=componentId%>">
+        <div class="mask J_slide_mask"></div>
+        <div class="container">
+            <div class="cnt">
+                <div id="lty_slider_<%=componentId%>"></div>
+            </div>
+            <div class="btn-slide J_slide_btn">立刻抽奖</div>
+        </div>
+    </div>
+</div>
