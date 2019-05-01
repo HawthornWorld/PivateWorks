@@ -1,9 +1,9 @@
 <template>
 	<div class="prize-wrapper">
-        <div class="title"></div>
-        <div class="list">
+		<div class="title"></div>
+		<div class="list">
 
-        </div>
+		</div>
 	</div>
 </template>
 
@@ -14,9 +14,7 @@ const BASE_URL = "../assets/images";
 export default {
 	name: "prize",
 	data() {
-		return {
-			
-		};
+		return {};
 	},
 	props: {
 		// userLang: {
@@ -24,12 +22,8 @@ export default {
 		// 	default: {}
 		// }
 	},
-	mounted() {
-		
-	},
-	methods: {
-	
-	}
+	mounted() {},
+	methods: {}
 };
 </script>
 
@@ -37,23 +31,25 @@ export default {
 <style lang="scss" scoped>
 @import "../assets/scss/common.scss";
 .prize-wrapper {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 
-    margin-top: 20px;
-    .title {
-        width: rem(296px);
-        height: rem(92px);
-        background: url(#{$base}/title-prize.png) center center no-repeat/100%; 
-    }
-    .list {
-        width: 96%;
-        height: 100px;
-        background: #6829c8;
-        border-radius: 10px;
-        margin-top: 10px;
-    }
+	margin-top: 20px;
+	.title {
+		width: rem(296px);
+		height: rem(92px);
+		background: url(#{$base}/img_title_myawards.png) center center
+			no-repeat/100%;
+		// background: url(#{$base}/img_border_wavestyle_1.png) center center no-repeat/100%;
+	}
+	.list {
+		width: 96%;
+		height: 100px;
+		background: #6829c8;
+		border-radius: 10px;
+		margin-top: 10px;
+	}
 }
 </style>

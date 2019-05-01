@@ -1,17 +1,19 @@
 <template>
 	<div class="index-wrapper">
-        <div class="banner">
-
-        </div>
-        <LotteryModule></LotteryModule>
-        <PrizeList></PrizeList>
+		<div class="banner"></div>
+		<BroadCast class="broadcast"></BroadCast>
+		<LotteryModule></LotteryModule>
+		<PrizeList></PrizeList>
+        <Rule></Rule>
 	</div>
 </template>
 
 <script>
-import LotteryModule from '../components/LotteryModule.vue'
-import PrizeList from '../components/PrizeList.vue'
-// import ScrollNote from '../components/ScrollNote.vue'
+import LotteryModule from "../components/LotteryModule.vue";
+import PrizeList from "../components/PrizeList.vue";
+import BroadCast from "../components/BroadCast.vue";
+import Rule from "../components/Rule.vue";
+
 export default {
 	name: "index",
 	data() {
@@ -25,9 +27,11 @@ export default {
 		}
 	},
 	components: {
-        LotteryModule,
-        PrizeList
-    }
+		LotteryModule,
+        PrizeList,
+        BroadCast,
+        Rule
+	}
 };
 </script>
 
@@ -35,18 +39,19 @@ export default {
 <style lang="scss" scoped>
 @import "../assets/scss/common.scss";
 .index-wrapper {
+    position: relative;
 	width: 100%;
-    background: #803ce6;
-    padding-bottom: 50px;
-    overflow-y: auto;
+	background: #803ce6;
+	padding-bottom: 50px;
+	// overflow-y: auto;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .banner {
-        width: 100%;
-        height: rem(490px);
-        background: url(#{$base}/banner.png) top left no-repeat/100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	.banner {
+		width: 100%;
+		height: rem(490px);
+		background: url(#{$base}/banner.png) top left no-repeat/100%;
     }
 }
 </style>
