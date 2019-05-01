@@ -1,11 +1,17 @@
 <template>
 	<div class="index-wrapper">
-		<h2>hello mayanyan</h2>
-		<div v-on:click="goToList">go to list</div>
+        <div class="banner">
+
+        </div>
+        <LotteryModule></LotteryModule>
+        <PrizeList></PrizeList>
 	</div>
 </template>
 
 <script>
+import LotteryModule from '../components/LotteryModule.vue'
+import PrizeList from '../components/PrizeList.vue'
+// import ScrollNote from '../components/ScrollNote.vue'
 export default {
 	name: "index",
 	data() {
@@ -18,7 +24,10 @@ export default {
 			this.$router.push("List");
 		}
 	},
-	components: {}
+	components: {
+        LotteryModule,
+        PrizeList
+    }
 };
 </script>
 
@@ -27,7 +36,17 @@ export default {
 @import "../assets/scss/common.scss";
 .index-wrapper {
 	width: 100%;
-	padding-bottom: 60px;
-	overflow-y: auto;
+    background: #803ce6;
+    padding-bottom: 50px;
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .banner {
+        width: 100%;
+        height: rem(490px);
+        background: url(#{$base}/banner.png) top left no-repeat/100%;
+    }
 }
 </style>

@@ -1,5 +1,5 @@
 @function rem($px) {
-	@return $px / 300px * 1rem;
+	@return $px / 200px * 1rem;
 }
 
 @mixin ellipsis($line: 1) {
