@@ -1,19 +1,13 @@
 <template>
-	<div class="lottery-wrapper">
-
-	</div>
+	<div class="lottery-wrapper"></div>
 </template>
 
 <script>
-import util from "../vendors/util.js";
-
-const BASE_URL = "../assets/images";
+// const BASE_URL = "../assets/images";
 export default {
 	name: "star",
 	data() {
-		return {
-			
-		};
+		return {};
 	},
 	props: {
 		// userLang: {
@@ -21,12 +15,8 @@ export default {
 		// 	default: {}
 		// }
 	},
-	mounted() {
-		
-	},
-	methods: {
-	
-	}
+	mounted() {},
+	methods: {}
 };
 </script>
 
@@ -34,11 +24,11 @@ export default {
 <style lang="scss" scoped>
 @import "../assets/scss/common.scss";
 .lottery-wrapper {
-    background: #6829c8;
-    width: 96%;
-    padding: 20px;
-    box-sizing: border-box;
-    border-radius: 10px;
-    height: 300px;
+	background: #6829c8;
+	width: 96%;
+	padding: 20px;
+	box-sizing: border-box;
+	border-radius: 10px;
+	height: 300px;
 }
 </style>
