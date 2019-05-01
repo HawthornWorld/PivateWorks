@@ -1,11 +1,9 @@
 <template>
 	<div class="list-wrapper">
-		<nav-bar></nav-bar>
 	</div>
 </template>
 
 <script>
-import NavBar from "../components/NavBar.vue";
 
 export default {
 	name: "list",
@@ -15,7 +13,6 @@ export default {
 	computed: {},
 	methods: {},
 	components: {
-		NavBar
 	}
 };
 </script>
