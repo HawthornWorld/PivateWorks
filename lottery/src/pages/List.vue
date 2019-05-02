@@ -17,7 +17,7 @@
 					<span class="txt-big">{{item.prize.title}}</span>
 					<span class="txt-small">领奖时间{{formatTime(new Date(item.create_time), "yyyy-MM-dd hh:mm:ss")}}</span>
 				</div>
-				<div class="item-stat-btn">
+				<div class="item-stat-btn" @click="go2order">
 					<span class="item-stat">{{btnMap(item.status)}}</span>
 				</div>
 			</div>
@@ -41,7 +41,7 @@ export default {
 			focusTab: BTNS.do
 		};
 	},
-	mounted: function() {
+	mounted() {
 		const restapi = "http://149.129.216.140/lottery/user/getLotteryRecord";
 		this.$axios
 			.post(restapi, {
@@ -84,26 +84,26 @@ export default {
 			});
 	},
 	computed: {
-		focusList: function() {
+		focusList() {
 			return this.focusTab === BTNS.do ? this.getList : this.notGetList;
 		},
-		tabStyle1: function() {
+		tabStyle1() {
 			return {
 				active: this.focusTab === BTNS.undo
 			};
 		},
-		tabStyle2: function() {
+		tabStyle2() {
 			return {
 				active: this.focusTab === BTNS.do
 			};
 		}
 	},
 	methods: {
-		switchList: function(id, events) {
+		switchList(id, events) {
 			events.preventDefault();
 			this.focusTab = id === BTNS.do ? BTNS.do : BTNS.undo;
 		},
-		formatTime: function(dataObj, fmt) {
+		formatTime(dataObj, fmt) {
 			var o = {
 				"M+": dataObj.getMonth() + 1, //月份
 				"d+": dataObj.getDate(), //日
@@ -128,7 +128,7 @@ export default {
 					);
 			return fmt;
 		},
-		btnMap: function(stat) {
+		btnMap(stat) {
 			let list = [
 				"已领取",
 				"待填写信息",
@@ -140,6 +140,10 @@ export default {
 				"已使用"
 			];
 			return list[stat - 1];
+		},
+		go2order(e) {
+			e.preventDefault();
+			this.$router.push("Order");
 		}
 	},
 	components: {}

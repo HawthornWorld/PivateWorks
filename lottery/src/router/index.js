@@ -9,11 +9,16 @@ const routes = [
 		name: "index",
 		component: () => import("../pages/Index.vue")
 	},
-    {
-        path: "/list",
-        name: "list",
-        component: () => import("../pages/List.vue")
-    }
+	{
+		path: "/list",
+		name: "list",
+		component: () => import("../pages/List.vue")
+	},
+	{
+		path: "/order",
+		name: "order",
+		component: () => import("../pages/Order.vue")
+	}
 ];
 
 export default new Router({
