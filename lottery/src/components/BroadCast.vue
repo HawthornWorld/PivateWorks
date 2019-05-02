@@ -1,19 +1,8 @@
 <template>
 	<div class="scroll-wrap">
-		<scroll
-		 :data="recordList"
-		 :class-option="optionLeft"
-		 class="cnt-wrap"
-		>
-			<ul
-			 class="scroll-cnt"
-			 id="scroll"
-			>
-				<li
-				 class="cnt"
-				 v-for="(item, index) in recordList"
-				 :key="index"
-				>{{item}}</li>
+		<scroll :data="recordList" :class-option="optionLeft" class="cnt-wrap">
+			<ul class="scroll-cnt" id="scroll">
+				<li class="cnt" v-for="(item, index) in recordList" :key="index">{{item}}</li>
 			</ul>
 		</scroll>
 	</div>
@@ -32,9 +21,10 @@ export default {
 		isMap: {
 			type: Boolean,
 			default: false
-		},
+        },
 		userLang: {
-			type: Object,
+            type: Object,
+            // eslint-disable-next-line
 			default: {} //默认中文
 		}
 	},
@@ -47,19 +37,18 @@ export default {
 				switchDelay: 0,
 				step: 0.5
 			};
-		},
-    },
-    watch: {
-        userLang(newVal,oldVal) {
-            if(newVal) {
-                //监听到props变化再调用接口
-			    this.fetchDrawRecord();
-            }
-        }
-    },
-	mounted() {
-
+		}
 	},
+	watch: {
+		// eslint-disable-next-line
+		userLang(newVal, oldVal) {
+			if (newVal) {
+				//监听到props变化再调用接口
+				this.fetchDrawRecord();
+			}
+		}
+	},
+	mounted() {},
 	methods: {
 		/**
 		 * 拉取获奖记录
