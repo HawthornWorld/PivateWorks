@@ -10,13 +10,15 @@
 		</div>
 		<div class="contend-wrap">
 			<div class="contend-item-wrap" v-for="(item, index) in focusList" :key="index">
-				<div class="item-img-wrap"></div>
+				<div class="item-img-wrap">
+					<img :src="'http://'+item.prize.url" alt="img" class="item-img">
+				</div>
 				<div class="item-txt-wrap">
-					<span class="txt-big">{{item.name}}</span>
-					<span class="txt-small">{{item.time}}</span>
+					<span class="txt-big">{{item.prize.title}}</span>
+					<span class="txt-small">领奖时间{{formatTime(new Date(item.create_time), "yyyy-MM-dd hh:mm:ss")}}</span>
 				</div>
 				<div class="item-stat-btn">
-					<span class="item-stat">{{item.stat}}</span>
+					<span class="item-stat">{{btnMap(item.status)}}</span>
 				</div>
 			</div>
 		</div>
@@ -24,18 +26,6 @@
 </template>
 
 <script>
-const STATS = {
-	//已领取
-	done: "已领取",
-	//已签收
-	get: "已签收",
-	//拒收
-	refuse: "已拒收",
-	//运输中
-	transport: "运输中",
-	//待发货
-	unsend: "待发货"
-};
 const BTNS = {
 	//已领取
 	do: 100,
@@ -46,35 +36,52 @@ export default {
 	name: "list",
 	data() {
 		return {
-			getList: [
-				{
-					img: "",
-					name: "HELLOKITTY美妆小工具套装x1",
-					time: "有效期至二零一九",
-					stat: STATS.done
-				},
-				{
-					img: "",
-					name: "HELLOKITTY美妆小工具套装x1",
-					time: "有效期至二零一九",
-					stat: STATS.done
-				},
-				{
-					img: "",
-					name: "HELLOKITTY美妆小工具套装x1",
-					time: "有效期至二零一九",
-					stat: STATS.done
-				},
-				{
-					img: "",
-					name: "HELLOKITTY美妆小工具套装x1",
-					time: "有效期至二零一九",
-					stat: STATS.done
-				}
-			],
+			getList: [],
 			notGetList: [],
 			focusTab: BTNS.do
 		};
+	},
+	mounted: function() {
+		const restapi = "http://149.129.216.140/lottery/user/getLotteryRecord";
+		this.$axios
+			.post(restapi, {
+				token: "TestToken",
+				page: 1
+			})
+			.then(res => {
+				if (res && res.data && res.data.code === 1) {
+					//未领取：实物未填写信息
+					//已领取：虚拟奖品，实物填写信息
+					let dataList = res.data.lottery_record;
+					dataList.forEach(element => {
+						//虚拟奖品
+						if (
+							element.prize &&
+							(element.prize.prize_type === 1 ||
+								element.prize.prize_type === 4)
+						) {
+							this.getList.push(element);
+						}
+						//实物奖品
+						if (
+							element.prize &&
+							(element.prize.prize_type === 2 ||
+								element.prize.prize_type === 3)
+						) {
+							//待填写信息，运输中，待发货
+							if (
+								element.status === 2 ||
+								element.status === 3 ||
+								element.status === 4
+							) {
+								this.notGetList.push(element);
+							} else {
+								this.getList.push(element);
+							}
+						}
+					});
+				}
+			});
 	},
 	computed: {
 		focusList: function() {
@@ -95,6 +102,44 @@ export default {
 		switchList: function(id, events) {
 			events.preventDefault();
 			this.focusTab = id === BTNS.do ? BTNS.do : BTNS.undo;
+		},
+		formatTime: function(dataObj, fmt) {
+			var o = {
+				"M+": dataObj.getMonth() + 1, //月份
+				"d+": dataObj.getDate(), //日
+				"h+": dataObj.getHours(), //小时
+				"m+": dataObj.getMinutes(), //分
+				"s+": dataObj.getSeconds(), //秒
+				"q+": Math.floor((dataObj.getMonth() + 3) / 3), //季度
+				S: dataObj.getMilliseconds() //毫秒
+			};
+			if (/(y+)/.test(fmt))
+				fmt = fmt.replace(
+					RegExp.$1,
+					(dataObj.getFullYear() + "").substr(4 - RegExp.$1.length)
+				);
+			for (var k in o)
+				if (new RegExp("(" + k + ")").test(fmt))
+					fmt = fmt.replace(
+						RegExp.$1,
+						RegExp.$1.length == 1
+							? o[k]
+							: ("00" + o[k]).substr(("" + o[k]).length)
+					);
+			return fmt;
+		},
+		btnMap: function(stat) {
+			let list = [
+				"已领取",
+				"待填写信息",
+				"等待发货",
+				"运输中",
+				"已签收",
+				"已拒签",
+				"未使用",
+				"已使用"
+			];
+			return list[stat - 1];
 		}
 	},
 	components: {}
@@ -137,7 +182,7 @@ export default {
 .nav-item-txt.active {
 	opacity: 1;
 	border-bottom: 3px solid #ff356b;
-    margin-top: 3px;
+	margin-top: 3px;
 }
 .contend-wrap {
 	width: 100%;
@@ -203,5 +248,8 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+.item-img {
+	max-width: 100%;
 }
 </style>
