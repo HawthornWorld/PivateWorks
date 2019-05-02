@@ -1,16 +1,13 @@
 <template>
 	<div class="prize-wrapper">
 		<div class="title"></div>
-		<div class="list">
-
-		</div>
+		<div class="list"></div>
 	</div>
 </template>
 
 <script>
-import util from "../vendors/util.js";
-
-const BASE_URL = "../assets/images";
+// import util from "../vendors/util.js";
+// const BASE_URL = "../assets/images";
 export default {
 	name: "prize",
 	data() {

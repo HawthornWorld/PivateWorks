@@ -87,7 +87,7 @@ export default {
 						this.$toast("获取数据失败");
 					}
 				})
-				.catch(error => {
+				.catch(() => {
 					this.$toast("网络繁忙，请稍后再试");
 				});
 		}

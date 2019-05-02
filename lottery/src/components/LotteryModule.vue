@@ -10,9 +10,7 @@
 </template>
 
 <script>
-import util from "../vendors/util.js";
-
-const BASE_URL = "../assets/images";
+// const BASE_URL = "../assets/images";
 export default {
 	name: "star",
 	data() {
