@@ -4,12 +4,9 @@
 			<div class="title"></div>
 			<table class="lottery-cnt">
 				<tbody>
-					<tr v-for="(row,idx) in prizeTypeList">
-						<td v-for="(item,idx) in row">
-							<img
-							 :src="item"
-							 alt="img"
-							>
+					<tr v-for="(row,idx) in prizeTypeList" :key="idx">
+						<td v-for="(item,idx) in row" :key="idx">
+							<img :src="item" alt="img">
 						</td>
 					</tr>
 				</tbody>
@@ -28,7 +25,6 @@ import shiti3 from "../assets/images/icon_shiti3_1.jpg";
 import vip from "../assets/images/icon_vip_1.jpg";
 import youhuiquan from "../assets/images/icon_youhuiquan_1.jpg";
 import zuanshi from "../assets/images/icon_zuanshi_1.jpg";
-const BASE_URL = "../assets/images";
 export default {
 	name: "lottery",
 	data() {
@@ -93,7 +89,7 @@ export default {
 		display: inline-block;
 		width: 88%;
 
-		transform: translate(-0.5%,-0.5%)
+		transform: translate(-0.5%, -0.5%);
 	}
 	table tbody tr {
 		width: 100%;
@@ -107,13 +103,13 @@ export default {
 	}
 	table tbody tr td {
 		width: rem(184px);
-        height: rem(152px);
+		height: rem(152px);
 		background: url(#{$base}/img_awardbg.png) 0 0 no-repeat/100%;
 
 		display: flex;
 		flex-direction: row;
-        align-items: center;
-        justify-content: center;
+		align-items: center;
+		justify-content: center;
 	}
 	table tbody tr td img {
 		display: inline-block;
