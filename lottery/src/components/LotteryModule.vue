@@ -47,7 +47,6 @@ import shiti3 from "../assets/images/icon_shiti3_1.jpg";
 import vip from "../assets/images/icon_vip_1.jpg";
 import youhuiquan from "../assets/images/icon_youhuiquan_1.jpg";
 import zuanshi from "../assets/images/icon_zuanshi_1.jpg";
-const BASE_URL = "../assets/images";
 export default {
 	name: "lottery",
 	data() {
