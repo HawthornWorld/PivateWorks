@@ -3,34 +3,39 @@
 		<scroll
 		 :data="recordList"
 		 :class-option="optionLeft"
-		 class="cnt-wrap">
+		 class="cnt-wrap"
+		>
 			<ul
 			 class="scroll-cnt"
-			 id="scroll">
+			 id="scroll"
+			>
 				<li
 				 class="cnt"
 				 v-for="(item, index) in recordList"
 				 :key="index"
-				><span>{{item.name}} </span>获<span> {{item.prize}}</span></li>
+				>{{item}}</li>
 			</ul>
 		</scroll>
 	</div>
 </template>Ï
 <script>
 import scroll from "vue-seamless-scroll";
-import broadInfo from "@/vendors/broadcast.js";
 
 export default {
 	name: "broad-cast",
 	data() {
 		return {
-			recordList: broadInfo
+			recordList: []
 		};
 	},
 	props: {
 		isMap: {
 			type: Boolean,
 			default: false
+		},
+		userLang: {
+			type: Object,
+			default: {} //默认中文
 		}
 	},
 	computed: {
@@ -42,44 +47,44 @@ export default {
 				switchDelay: 0,
 				step: 0.5
 			};
-		}
-	},
-	mounted() {
-	// 	this.fetchDrawRecord();
-    // },
+		},
     },
+    watch: {
+        userLang(newVal,oldVal) {
+            if(newVal) {
+                //监听到props变化再调用接口
+			    this.fetchDrawRecord();
+            }
+        }
+    },
+	mounted() {
+
+	},
 	methods: {
 		/**
 		 * 拉取获奖记录
 		 */
+		// http://149.129.216.140/lottery/user/getLotteryRecord
 		fetchDrawRecord() {
-                const markBook =
-				"//previewapi.raymangaapp.com/previewapi/v1/common/markBook";
+			const fakeRecord =
+				"http://149.129.216.140/lottery/common/getFakeRecord";
 
-                this.$axios
-				.post(markBook, {
-					cookie_id: this.cookieId,
-					chapter_id: parseInt(this.chapterId),
-					score: this.userScore,
-					suggestion: this.comment || ""
+			this.$axios
+				.post(fakeRecord, {
+					// language_id: this.langId
+					language_id: this.userLang.id
 				})
 				.then(res => {
 					/**
 					 * 状态码
 					 * 1     ：成功
-					 * 2000  ：常规错误
-					 * 2001  ：参数错误
-					 * 2002  ：数据库连接错误
+					 * 其他  ：调用失败
 					 */
-					const { code } = res.data;
+					const { code, lottery_record } = res.data;
 					if (code === 1) {
-						this.$toast("提交成功");
-					} else if (code === 2000) {
-						this.$toast("常规错误(2000)");
-					} else if (code === 2001) {
-						this.$toast("参数错误(2001)");
-					} else if (code === 2002) {
-						this.$toast("数据库连接错误(2002)");
+						this.recordList = lottery_record;
+					} else {
+						this.$toast("获取数据失败");
 					}
 				})
 				.catch(error => {
@@ -96,18 +101,18 @@ export default {
 @import "../assets/scss/common.scss";
 
 .scroll-wrap {
-    position: absolute;
-    top: 2.5%;
+	position: absolute;
+	top: 2.5%;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	width: 100%;
 	height: rem(52px);
 	color: #fff;
-    text-align: center;
-    padding: 0 10px;
+	text-align: center;
+	padding: 0 10px;
 	box-sizing: border-box;
-    background: rgba(0,0,0,.6);
+	background: rgba(0, 0, 0, 0.6);
 }
 
 .cnt-wrap {
@@ -125,6 +130,5 @@ export default {
 		line-height: 22px;
 		margin-right: 40px;
 	}
-
 }
 </style>

@@ -20,17 +20,17 @@ module.exports = {
 			"Access-Control-Allow-Headers": "X-Requested-With",
 			"Access-Control-Allow-Headers": "Content-Type"
 		},
-		https: false
-		// proxy: {
-		//   '/getBookInfo': {
-		//     target:
-		//       'http://previewapi.raymangaapp.com/previewapi/v1/common/getBookInfo',
-		//     ws: true,
-		//     changeOrigin: true,
-		//     pathRewrite: {
-		//       '^/getBookInfo': '/'
-		//     }
-		//   },
+		https: false,
+		proxy: {
+		  '/getBookInfo': {
+		    target:
+		      'http://149.129.216.140/lottery/user/getLotteryRecord',
+		    ws: true,
+		    changeOrigin: true,
+		    pathRewrite: {
+		      '^/getBookInfo': '/'
+		    }
+		  },
 		//   '/getChapterDetail': {
 		//     target:
 		//       'http://previewapi.raymangaapp.com/previewapi/v1/common/getChapterDetail',
@@ -58,6 +58,6 @@ module.exports = {
 		//       '^/uploadEvent': '/'
 		//     }
 		//   }
-		// }
+		}
 	}
 };

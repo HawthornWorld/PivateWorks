@@ -1,6 +1,11 @@
 <template>
 	<div class="lottery-wrapper">
+		<div class="lottery-wrap">
+			<div class="title"></div>
+			<div class="lottery-cnt">
 
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -11,9 +16,7 @@ const BASE_URL = "../assets/images";
 export default {
 	name: "star",
 	data() {
-		return {
-			
-		};
+		return {};
 	},
 	props: {
 		// userLang: {
@@ -21,12 +24,8 @@ export default {
 		// 	default: {}
 		// }
 	},
-	mounted() {
-		
-	},
-	methods: {
-	
-	}
+	mounted() {},
+	methods: {}
 };
 </script>
 
@@ -34,11 +33,26 @@ export default {
 <style lang="scss" scoped>
 @import "../assets/scss/common.scss";
 .lottery-wrapper {
-    background: #6829c8;
-    width: 96%;
-    padding: 20px;
-    box-sizing: border-box;
-    border-radius: 10px;
-    height: 300px;
+	background: #6829c8;
+	width: 96%;
+	padding: 20px;
+	box-sizing: border-box;
+	border-radius: 10px;
+	// height: 300px;
+	.title {
+		display: inline-block;
+		width: rem(306px);
+		height: rem(86px);
+		background: url(#{$base}/img_mypoints.png) 0 0 no-repeat/100%;
+	}
+	.lottery-cnt {
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+		width: rem(652px);
+		height: rem(562px);
+		background: url(#{$base}/bg_awards_borderlights.png) center center
+			no-repeat/100%;
+	}
 }
 </style>
