@@ -15,7 +15,7 @@
 // const BASE_URL = '../assets/images'
 
 export default {
-	name: "share-mask",
+	name: "detail-mask",
 	data() {
 		return {
 			//   isShareShow: false,
