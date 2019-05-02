@@ -4,15 +4,9 @@
 			<div class="title"></div>
 			<table class="lottery-cnt">
 				<tbody>
-					<tr v-for="(row,idx) in prizeTypeList">
-						<td
-						 v-for="(item,idx) in row"
-						 :class="item.name"
-						>
-							<img
-							 :src="item.img"
-							 alt="img"
-							>
+					<tr v-for="(row,idx) in prizeTypeList" :key="idx">
+						<td v-for="(item,idx) in row" :class="item.name" :key="idx">
+							<img :src="item.img" alt="img">
 						</td>
 					</tr>
 				</tbody>
@@ -21,14 +15,14 @@
 				<li class="draw-five">
 					<div class="tip">
 						<span>Tingkat kemenangan</span>
-						<span>+150% </span>
+						<span>+150%</span>
 					</div>
 					<div class="btn"></div>
 				</li>
 				<li class="draw-ten">
 					<div class="tip">
 						<span>Tingkat kemenangan</span>
-						<span>+150% </span>
+						<span>+150%</span>
 					</div>
 					<div class="btn"></div>
 				</li>
@@ -78,13 +72,8 @@ export default {
 	},
 	mounted() {},
 	methods: {
-		draw() {
-
-        },
-        roll() {
-
-        }
-	
+		draw() {},
+		roll() {}
 	}
 };
 </script>
