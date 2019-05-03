@@ -20,15 +20,15 @@
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">您的电话</span>
-				<input type="text" class="item-input">
+				<input type="number" class="item-input">
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">国家</span>
-				<input type="text" class="item-input">
+				<div class="item-input" @click="pickCountry"></div>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">省/直辖市</span>
-				<input type="text" class="item-input">
+				<div class="item-input" @click="pickProv"></div>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">市</span>
@@ -63,11 +63,19 @@
 				<img :src="appLogoImg" alt="logo">
 			</div>
 		</div>
+		<mt-actionsheet :actions="countries" v-model="showCountry"></mt-actionsheet>
+		<mt-actionsheet :actions="proviences" v-model="showProv"></mt-actionsheet>
 	</div>
 </template>
 
 <script>
+import Vue from "vue";
+import { Actionsheet } from "mint-ui";
 import logo from "../assets/images/paymangaapp.png";
+import cdata from "./mock.js";
+
+Vue.component(Actionsheet.name, Actionsheet);
+
 export default {
 	name: "order",
 	data() {
@@ -82,12 +90,48 @@ export default {
 				prize_type: 1,
 				title: "Berlianx50",
 				url: "http://149.129.219.103/prize/icon_zuanshi_1.jpg"
-			}
+			},
+			showCountry: false,
+			showProv: false,
+			countries: [],
+			proviences: [],
+			provienceID: -1
 		};
 	},
 	computed: {},
-	mounted() {},
-	methods: {},
+	watch: {
+		provienceID(val, old) {
+			if (val) {
+				let prov = [];
+				if (cdata.prov[val]) {
+					cdata.prov[val].forEach(p => {
+						p.method = function() {
+							this.cityID = p.child;
+						};
+						prov.push(p);
+					});
+				}
+				this.proviences = prov;
+			}
+		}
+	},
+	mounted() {
+		var self = this;
+		cdata.country.forEach(c => {
+			c.method = function() {
+				self.provienceID = c.child;
+			};
+			this.countries.push(c);
+		});
+	},
+	methods: {
+		pickCountry() {
+			this.showCountry = true;
+		},
+		pickProv() {
+			this.showProv = true;
+		}
+	},
 	components: {}
 };
 </script>
@@ -168,6 +212,15 @@ export default {
 	background: #e7e7e7;
 	border-radius: 3px;
 	margin-top: 6px;
+	padding-left: 5px;
+	box-sizing: border-box;
+	font-family: AdobeHeitiStd-Regular;
+	font-size: 15px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 2px;
+	color: #000000;
+	text-align: center;
 }
 .mt9 {
 	margin-top: 9px;
