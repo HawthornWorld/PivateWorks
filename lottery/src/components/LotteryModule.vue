@@ -1,12 +1,29 @@
 <template>
 	<div class="lottery-wrapper">
 		<div class="lottery-wrap">
-			<div class="title"></div>
+			<div class="title">{{userPoint}}</div>
 			<table class="lottery-cnt">
 				<tbody>
-					<tr v-for="(row,idx) in prizeTypeList" :key="idx">
-						<td v-for="(item,idx) in row" :class="item.name" :key="idx">
-							<img :src="item.img" alt="img">
+					<tr
+					 v-for="(row,idx) in prizeList"
+					 :key="idx"
+					>
+						<td
+						 v-for="(item,idx) in row"
+						 :class="`prize${item.prize_id}`"
+						 :key="idx"
+						 :id="item.prize_id"
+						>
+							<img
+							 v-if="item.prize_id !== 888"
+							 :src="`http://${item.url}`"
+							 alt=""
+							>
+							<img
+							 v-if="item.prize_id === 888"
+							 :src="item.url"
+							 alt=""
+							>
 						</td>
 					</tr>
 				</tbody>
@@ -32,36 +49,15 @@
 </template>
 
 <script>
-import jifen1 from "../assets/images/icon_jifen_1.jpg";
-import quan1 from "../assets/images/icon_quan_1.jpg";
-import shiti1 from "../assets/images/icon_shiti1_1.jpg";
-import shiti2 from "../assets/images/icon_shiti2_1.jpg";
 import draw1 from "../assets/images/img_btn_draw1.png";
-import shiti3 from "../assets/images/icon_shiti3_1.jpg";
-import vip from "../assets/images/icon_vip_1.jpg";
-import youhuiquan from "../assets/images/icon_youhuiquan_1.jpg";
-import zuanshi from "../assets/images/icon_zuanshi_1.jpg";
+import lang from "@/vendors/lang.js";
+
 export default {
 	name: "lottery",
 	data() {
 		return {
-			prizeTypeList: [
-				[
-					{ img: jifen1, name: "prize1" },
-					{ img: quan1, name: "prize2" },
-					{ img: shiti1, name: "prize3" }
-				],
-				[
-					{ img: shiti2, name: "prize4" },
-					{ img: draw1, name: "j_btn_draw" },
-					{ img: shiti3, name: "prize5" }
-				],
-				[
-					{ img: vip, name: "prize6" },
-					{ img: youhuiquan, name: "prize7" },
-					{ img: zuanshi, name: "prize8" }
-				]
-			]
+			prizeList: [],
+			userPoint: ''
 		};
 	},
 	props: {
@@ -70,10 +66,105 @@ export default {
 		// 	default: {}
 		// }
 	},
-	mounted() {},
+	created() {
+		//获取用户设备语言 包含常规浏览器和ie浏览器
+		this.langKey = (navigator.language || navigator.userLanguage).slice(
+			0,
+			2
+		);
+		//切换ui至相应语言
+		this.userLang = lang[this.langKey];
+	},
+	mounted() {
+		//获取九宫格奖品
+		this.getPrizeList();
+		//获取用户积分
+		this.getPoint();
+	},
 	methods: {
-		draw() {},
-		roll() {}
+		/**
+		 * 获取九宫格及奖品详情页奖品列表
+		 */
+		getPrizeList() {
+			const getPrizeList =
+				"http://149.129.216.140/lottery/common/getPrizeList";
+			this.$axios
+				.post(getPrizeList, {
+					language_id: 1
+				})
+				.then(res => {
+					/**
+					 * 状态码
+					 * 1     ：成功
+					 * 其他  ：调用失败
+					 */
+					const { code, prize_list } = res.data;
+					if (code === 1) {
+						let list = prize_list;
+						let row1 = prize_list.slice(0, 3);
+						let row2 = prize_list.slice(2, 4);
+						row2.splice(1, 0, { url: draw1, prize_id: 888 });
+						let row3 = prize_list.slice(4, 7);
+						this.prizeList.push(row1);
+						this.prizeList.push(row2);
+						this.prizeList.push(row3);
+					} else {
+						this.$toast("获取数据失败");
+					}
+				})
+				.catch(() => {
+					this.$toast("网络繁忙，请稍后再试");
+				});
+		},
+		/**
+		 * 获取用户积分
+		 */
+		getPoint() {
+			const getUserInfo =
+				"http://149.129.216.140/lottery/user/getUserInfo";
+			this.$axios
+				.post(getUserInfo, {
+					token: "TestToken"
+				})
+				.then(res => {
+					const { code, point } = res.data;
+					if (code === 1) {
+						this.userPoint = point;
+					} else if (code === 2003) {
+						this.$toast("token过期");
+					}
+				})
+				.catch(() => {
+					this.$toast("网络繁忙，请稍后再试");
+				});
+		},
+		/**
+		 * 抽奖事件
+		 */
+		drawHandler() {
+			const lottery = "http://149.129.216.140/lottery/user/lottery";
+			this.$axios
+				.post(lottery, {
+					token: "token1",
+					language_id: this.userLang.id,
+					lottery_type: 1
+				})
+				.then(res => {
+					const { code, lottery_record } = res.data;
+					if (code === 1) {
+						this.recordList = lottery_record;
+					} else {
+						this.$toast("获取数据失败");
+					}
+				})
+				.catch(() => {
+					this.$toast("网络繁忙，请稍后再试");
+				});
+		},
+		/**
+		 * 跑马灯动画
+		 */
+		rollAnimate() {}
 	}
 };
 </script>
@@ -97,9 +188,14 @@ export default {
 	}
 	.title {
 		display: inline-block;
+		color: #fff;
 		width: rem(306px);
 		height: rem(86px);
 		background: url(#{$base}/img_mypoints.png) 0 0 no-repeat/100%;
+		text-align: center;
+		line-height: rem(86px);
+        padding-left: rem(14px);
+        box-sizing: border-box;
 	}
 	.lottery-cnt {
 		position: relative;
