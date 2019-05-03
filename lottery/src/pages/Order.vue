@@ -16,11 +16,11 @@
 		<div class="addr-wrap">
 			<div class="item-wrap">
 				<span class="item-title">您的名字</span>
-				<input type="text" class="item-input">
+				<input type="text" class="item-input" v-model="usrname">
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">您的电话</span>
-				<input type="number" class="item-input">
+				<input type="number" class="item-input" v-model="phone">
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">国家</span>
@@ -52,7 +52,7 @@
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">详细地址</span>
-				<textarea type="text" class="item-input-area"></textarea>
+				<textarea type="text" class="item-input-area" v-model="detailAddr"></textarea>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">快递费用及时间</span>
@@ -64,7 +64,7 @@
 				<span class="tip-item">3.我们会在您提交联系方式之后2天内发货,请耐心等待;</span>
 			</div>
 			<div class="btn-wrap">
-				<button class="submit-btn">提交</button>
+				<button class="submit-btn" @click="submit">提交</button>
 			</div>
 			<div class="special-tip" style="margin-bottom: 10px">
 				<div class="sp-tip-title">特别说明</div>
@@ -91,6 +91,8 @@ import cdata from "./mock.js";
 Vue.component(Actionsheet.name, Actionsheet);
 //查询运费
 const restapi = "http://149.129.216.140/lottery/common/getFreight";
+//提交
+const submitapi = "http://149.129.216.140/lottery/user/receiveAward";
 export default {
 	name: "order",
 	data() {
@@ -125,7 +127,10 @@ export default {
 			provID: -1,
 			cityID: -1,
 			disID: -1,
-			freight: 0
+			freight: 0,
+			phone: "",
+			usrname: "",
+			detailAddr: ""
 		};
 	},
 	computed: {},
@@ -237,6 +242,29 @@ export default {
 		},
 		pickDis() {
 			this.showDistrict = true;
+		},
+		submit() {
+			if (!this.phone) {
+				this.$toast("请输入手机号");
+				return;
+			}
+			// order_code && prizedto 从上个页面传过来
+			this.$axios
+				.post(submitapi, {
+					token: "TestToken",
+					order_code: "19040155661881918875192",
+					phone: this.phone,
+					country_id: this.countryID || 0,
+					province_id: this.provID || 0,
+					city_id: this.cityID || 0,
+					detail: this.detailAddr || "",
+					name: this.usrname || ""
+				})
+				.then(res => {
+					if (res && res.code && res.code === 1) {
+						this.$toast("success");
+					}
+				});
 		}
 	},
 	components: {}
