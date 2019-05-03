@@ -2,12 +2,14 @@
 	<div class="order-wrap">
 		<div class="header">
 			<div class="header-cnt">
-				<div class="img"></div>
+				<div class="img">
+					<img :src="prize.detail_url" alt="detail" class="prize-img">
+				</div>
 				<ul class="txt">
-					<li class="title">hello kitty</li>
-					<li class="desc">非常可爱非常可爱非常可爱非常可爱非常可爱非常可爱非常可爱非常可爱非常可爱非常可爱</li>
-					<li class="price">Rp 0.000</li>
-					<li>Rp 0.000</li>
+					<li class="title">{{prize.title}}</li>
+					<li class="desc">{{prize.detail}}</li>
+					<li class="price">{{prize.price}}</li>
+					<li>{{prize.original_price}}</li>
 				</ul>
 			</div>
 		</div>
@@ -70,7 +72,17 @@ export default {
 	name: "order",
 	data() {
 		return {
-			appLogoImg: logo
+			appLogoImg: logo,
+			prize: {
+				detail: "Berlianx50",
+				detail_url: "http://149.129.219.103/prize/icon_zuanshi_2.jpg",
+				original_price: 0,
+				price: 0,
+				prize_id: 4,
+				prize_type: 1,
+				title: "Berlianx50",
+				url: "http://149.129.219.103/prize/icon_zuanshi_1.jpg"
+			}
 		};
 	},
 	computed: {},
@@ -220,14 +232,19 @@ export default {
 	color: #7a7a7a;
 }
 .app-img-wrap {
-    width: 100%;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 30px;
+	width: 100%;
+	height: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 30px;
 }
-.app-img-wrap>img {
-    max-width: 1.62rem /* 162/100 */;
+.app-img-wrap > img {
+	max-width: 1.62rem /* 162/100 */;
+}
+.prize-img {
+	width: rem(300px);
+	height: rem(300px);
+	max-width: rem(300px);
 }
 </style>
