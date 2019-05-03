@@ -24,27 +24,39 @@
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">国家</span>
-				<div class="item-input" @click="pickCountry"></div>
+				<div class="item-input-btn" @click="pickCountry">
+					<span>{{countryName}}</span>
+					<span class="input-tri"></span>
+				</div>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">省/直辖市</span>
-				<div class="item-input" @click="pickProv"></div>
+				<div class="item-input-btn" @click="pickProv">
+					<span>{{provName}}</span>
+					<span class="input-tri"></span>
+				</div>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">市</span>
-				<input type="text" class="item-input">
+				<div class="item-input-btn" @click="pickCity">
+					<span>{{cityName}}</span>
+					<span class="input-tri"></span>
+				</div>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">区</span>
-				<input type="text" class="item-input">
+				<div class="item-input-btn" @click="pickDis">
+					<span>{{disName}}</span>
+					<span class="input-tri"></span>
+				</div>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">详细地址</span>
-				<input type="text" class="item-input">
+				<textarea type="text" class="item-input-area"></textarea>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">快递费用及时间</span>
-				<input type="text" class="item-input">
+				<div type="text" class="item-input-btn">{{this.freight}}</div>
 			</div>
 			<div class="tip-wrap">
 				<span class="tip-item">1.如果您的地址不在选择范围内,请直接联系客服;</span>
@@ -65,6 +77,8 @@
 		</div>
 		<mt-actionsheet :actions="countries" v-model="showCountry"></mt-actionsheet>
 		<mt-actionsheet :actions="proviences" v-model="showProv"></mt-actionsheet>
+		<mt-actionsheet :actions="cities" v-model="showCity"></mt-actionsheet>
+		<mt-actionsheet :actions="districts" v-model="showDistrict"></mt-actionsheet>
 	</div>
 </template>
 
@@ -75,7 +89,8 @@ import logo from "../assets/images/paymangaapp.png";
 import cdata from "./mock.js";
 
 Vue.component(Actionsheet.name, Actionsheet);
-
+//查询运费
+const restapi = "http://149.129.216.140/lottery/common/getFreight";
 export default {
 	name: "order",
 	data() {
@@ -93,25 +108,109 @@ export default {
 			},
 			showCountry: false,
 			showProv: false,
+			showCity: false,
+			showDistrict: false,
 			countries: [],
 			proviences: [],
-			provienceID: -1
+			cities: [],
+			districts: [],
+			countryID: -1,
+			provienceIndex: -1,
+			cityIndex: -1,
+			districtIndex: -1,
+			countryName: "",
+			provName: "",
+			cityName: "",
+			disName: "",
+			provID: -1,
+			cityID: -1,
+			disID: -1,
+			freight: 0
 		};
 	},
 	computed: {},
 	watch: {
-		provienceID(val, old) {
+		countryID(val, old) {
+			if (old !== -1) {
+				this.provName = "";
+				this.cityName = "";
+				this.disName = "";
+			}
+		},
+		provienceIndex(val, old) {
+			var self = this;
+			if (old !== -1) {
+				this.cityIndex = -1;
+				this.districtIndex = -1;
+				this.cityName = "";
+				this.disName = "";
+			}
 			if (val) {
 				let prov = [];
 				if (cdata.prov[val]) {
 					cdata.prov[val].forEach(p => {
 						p.method = function() {
-							this.cityID = p.child;
+							self.cityIndex = p.child;
+							self.provName = p.name;
+							self.provID = p.id;
 						};
 						prov.push(p);
 					});
 				}
 				this.proviences = prov;
+			}
+		},
+		cityIndex(val, old) {
+			var self = this;
+			if (old !== -1) {
+				this.districtIndex = -1;
+				this.cityName = "";
+				this.disName = "";
+			}
+			if (val) {
+				let city = [];
+				if (cdata.city[val]) {
+					cdata.city[val].forEach(c => {
+						c.method = function() {
+							self.districtIndex = c.child;
+							self.cityName = c.name;
+							self.cityID = c.id;
+							//根据国家，省份，城市查询运费
+							self.$axios
+								.post(restapi, {
+									country_id: self.countryID,
+									province_id: self.provID,
+									city_id: self.cityID
+								})
+								.then(res => {
+									if (res && res.data) {
+										this.freight = res.data.freight;
+									}
+								});
+						};
+						city.push(c);
+					});
+				}
+				this.cities = city;
+			}
+		},
+		districtIndex(val, old) {
+			var self = this;
+			if (old !== -1) {
+				this.disName = "";
+			}
+			if (val) {
+				let dis = [];
+				if (cdata.district[val]) {
+					cdata.district[val].forEach(c => {
+						c.method = function() {
+							self.disName = c.name;
+							self.disID = c.id;
+						};
+						dis.push(c);
+					});
+				}
+				this.districts = dis;
 			}
 		}
 	},
@@ -119,7 +218,9 @@ export default {
 		var self = this;
 		cdata.country.forEach(c => {
 			c.method = function() {
-				self.provienceID = c.child;
+				self.countryID = c.id;
+				self.countryName = c.name;
+				self.provienceIndex = c.child;
 			};
 			this.countries.push(c);
 		});
@@ -130,6 +231,12 @@ export default {
 		},
 		pickProv() {
 			this.showProv = true;
+		},
+		pickCity() {
+			this.showCity = true;
+		},
+		pickDis() {
+			this.showDistrict = true;
 		}
 	},
 	components: {}
@@ -222,6 +329,27 @@ export default {
 	color: #000000;
 	text-align: center;
 }
+.item-input-btn {
+	margin-left: 0.275rem;
+	margin-right: 0.25rem; /* 25/100 */
+	height: 39px;
+	background: #e7e7e7;
+	border-radius: 3px;
+	margin-top: 6px;
+	padding-left: 15px;
+	padding-right: 15px;
+	box-sizing: border-box;
+	font-family: AdobeHeitiStd-Regular;
+	font-size: 15px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 2px;
+	color: #000000;
+	text-align: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
 .mt9 {
 	margin-top: 9px;
 }
@@ -299,5 +427,31 @@ export default {
 	width: rem(300px);
 	height: rem(300px);
 	max-width: rem(300px);
+}
+.input-tri {
+	width: 0;
+	height: 0;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-top: 7px solid rgba(0, 0, 0, 0.4);
+}
+.item-input-area {
+	margin-left: 0.275rem;
+	margin-right: 0.25rem; /* 25/100 */
+	height: 80px;
+	background: #e7e7e7;
+	border-radius: 3px;
+	margin-top: 6px;
+	padding-left: 5px;
+	box-sizing: border-box;
+	font-family: AdobeHeitiStd-Regular;
+	font-size: 15px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 2px;
+	color: #000000;
+	outline: none;
+	resize: none;
+	border: none;
 }
 </style>
