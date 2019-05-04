@@ -1,23 +1,46 @@
 <template>
 	<div class="list-wrapper">
 		<div class="nav-wrap">
-			<div class="nav-item-wrap" @click="switchList(101, $event)">
-				<span class="nav-item-txt" :class="tabStyle1">未领取</span>
+			<div
+			 class="nav-item-wrap"
+			 @click="switchList(101, $event)"
+			>
+				<span
+				 class="nav-item-txt"
+				 :class="tabStyle1"
+				>未领取</span>
 			</div>
-			<div class="nav-item-wrap" @click="switchList(100, $event)">
-				<span class="nav-item-txt" :class="tabStyle2">已领取</span>
+			<div
+			 class="nav-item-wrap"
+			 @click="switchList(100, $event)"
+			>
+				<span
+				 class="nav-item-txt"
+				 :class="tabStyle2"
+				>已领取</span>
 			</div>
 		</div>
 		<div class="contend-wrap">
-			<div class="contend-item-wrap" v-for="(item, index) in focusList" :key="index">
+			<div
+			 class="contend-item-wrap"
+			 v-for="(item, index) in focusList"
+			 :key="index"
+			>
 				<div class="item-img-wrap">
-					<img :src="'http://'+item.prize.url" alt="img" class="item-img">
+					<img
+					 :src="'http://'+item.prize.url"
+					 alt="img"
+					 class="item-img"
+					>
 				</div>
 				<div class="item-txt-wrap">
 					<span class="txt-big">{{item.prize.title}}</span>
 					<span class="txt-small">领奖时间{{formatTime(new Date(item.create_time), "yyyy-MM-dd hh:mm:ss")}}</span>
 				</div>
-				<div class="item-stat-btn" @click="go2order(item,$event)">
+				<div
+				 class="item-stat-btn"
+				 @click="go2order(item,$event)"
+				>
 					<span class="item-stat">{{btnMap(item.status)}}</span>
 				</div>
 			</div>
@@ -69,7 +92,6 @@ export default {
 								element.prize.prize_type === 3)
 						) {
 							//待填写信息，运输中，待发货
-							console.log(element);
 							if (
 								element.status === 2 ||
 								element.status === 3 ||
@@ -183,8 +205,8 @@ export default {
 						status: item.status
 					}
 				});
-            }
-            //话费详情
+			}
+			//话费详情
 			if (item.prize.prize_type === 4) {
 				this.$router.push({
 					name: "phonedetail",

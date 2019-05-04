@@ -3,7 +3,11 @@
 		<div class="header">
 			<div class="header-cnt">
 				<div class="img">
-					<img :src="prize.detail_url" alt="detail" class="prize-img">
+					<img
+					 :src="prize.detail_url"
+					 alt="detail"
+					 class="prize-img"
+					>
 				</div>
 				<ul class="txt">
 					<li class="title">{{prize.title}}</li>
@@ -16,47 +20,74 @@
 		<div class="addr-wrap">
 			<div class="item-wrap">
 				<span class="item-title">您的名字</span>
-				<input type="text" class="item-input" v-model="usrname">
+				<input
+				 type="text"
+				 class="item-input"
+				 v-model="usrname"
+				>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">您的电话</span>
-				<input type="number" class="item-input" v-model="phone">
+				<input
+				 type="number"
+				 class="item-input"
+				 v-model="phone"
+				>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">国家</span>
-				<div class="item-input-btn" @click="pickCountry">
+				<div
+				 class="item-input-btn"
+				 @click="pickCountry"
+				>
 					<span>{{countryName}}</span>
 					<span class="input-tri"></span>
 				</div>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">省/直辖市</span>
-				<div class="item-input-btn" @click="pickProv">
+				<div
+				 class="item-input-btn"
+				 @click="pickProv"
+				>
 					<span>{{provName}}</span>
 					<span class="input-tri"></span>
 				</div>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">市</span>
-				<div class="item-input-btn" @click="pickCity">
+				<div
+				 class="item-input-btn"
+				 @click="pickCity"
+				>
 					<span>{{cityName}}</span>
 					<span class="input-tri"></span>
 				</div>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">区</span>
-				<div class="item-input-btn" @click="pickDis">
+				<div
+				 class="item-input-btn"
+				 @click="pickDis"
+				>
 					<span>{{disName}}</span>
 					<span class="input-tri"></span>
 				</div>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">详细地址</span>
-				<textarea type="text" class="item-input-area" v-model="detailAddr"></textarea>
+				<textarea
+				 type="text"
+				 class="item-input-area"
+				 v-model="detailAddr"
+				></textarea>
 			</div>
 			<div class="item-wrap mt9">
 				<span class="item-title">快递费用及时间</span>
-				<div type="text" class="item-input-btn">{{this.freight}}</div>
+				<div
+				 type="text"
+				 class="item-input-btn"
+				>{{this.freight}}</div>
 			</div>
 			<div class="tip-wrap">
 				<span class="tip-item">1.如果您的地址不在选择范围内,请直接联系客服;</span>
@@ -64,21 +95,42 @@
 				<span class="tip-item">3.我们会在您提交联系方式之后2天内发货,请耐心等待;</span>
 			</div>
 			<div class="btn-wrap">
-				<button class="submit-btn" @click="submit">提交</button>
+				<button
+				 class="submit-btn"
+				 @click="submit"
+				>提交</button>
 			</div>
-			<div class="special-tip" style="margin-bottom: 10px">
+			<div
+			 class="special-tip"
+			 style="margin-bottom: 10px"
+			>
 				<div class="sp-tip-title">特别说明</div>
 				<span class="sp-tip-item">1.若因地址不详,联系号码错误,停机等个人原因导致快递多次配送不成功,延期退回后我们将不再进行二次发货,非质量问题不退换,敬请谅解;</span>
 				<span class="sp-tip-item">2.如有疑问可直接联系客服;</span>
 			</div>
 			<div class="app-img-wrap">
-				<img :src="appLogoImg" alt="logo">
+				<img
+				 :src="appLogoImg"
+				 alt="logo"
+				>
 			</div>
 		</div>
-		<mt-actionsheet :actions="countries" v-model="showCountry"></mt-actionsheet>
-		<mt-actionsheet :actions="proviences" v-model="showProv"></mt-actionsheet>
-		<mt-actionsheet :actions="cities" v-model="showCity"></mt-actionsheet>
-		<mt-actionsheet :actions="districts" v-model="showDistrict"></mt-actionsheet>
+		<mt-actionsheet
+		 :actions="countries"
+		 v-model="showCountry"
+		></mt-actionsheet>
+		<mt-actionsheet
+		 :actions="proviences"
+		 v-model="showProv"
+		></mt-actionsheet>
+		<mt-actionsheet
+		 :actions="cities"
+		 v-model="showCity"
+		></mt-actionsheet>
+		<mt-actionsheet
+		 :actions="districts"
+		 v-model="showDistrict"
+		></mt-actionsheet>
 	</div>
 </template>
 
@@ -264,9 +316,7 @@ export default {
 						this.$route.go(-1);
 					}
 				})
-				.catch(err => {
-					console.log(err);
-				});
+				.catch(err => {});
 		}
 	},
 	components: {}

@@ -26,7 +26,7 @@
 							 :id="item.prize_id"
 							 :src="item.url"
 							 alt=""
-                             @click="drawHandler(1,item,$event)"
+							 @click="drawHandler(1,item,$event)"
 							>
 						</td>
 					</tr>
@@ -64,9 +64,9 @@
 		></DetailMask>
 		<PrizePop
 		 :isPrizePop="isPrizePop"
-         :isSingleDraw="isSingleDraw"
-         :isRepeatDraw="isRepeatDraw"
-         :resultData="resultPrizeList"
+		 :isSingleDraw="isSingleDraw"
+		 :isRepeatDraw="isRepeatDraw"
+		 :resultData="resultPrizeList"
 		 @prizePop="prizePop"
 		></PrizePop>
 	</div>
@@ -88,11 +88,11 @@ export default {
 			isRolling: false,
 			currentIdx: 0,
 			isDetailShow: false,
-            isPrizePop: false,
-            isSingleDraw: false,
-            isRepeatDraw: false,
-            detailData: {},
-            resultPrizeList: []
+			isPrizePop: false,
+			isSingleDraw: false,
+			isRepeatDraw: false,
+			detailData: {},
+			resultPrizeList: []
 		};
 	},
 	props: {
@@ -125,12 +125,12 @@ export default {
 		 * 中奖结果页开关
 		 */
 		prizePop(type, list) {
-            console.log('=========',type)
-            this.isPrizePop = !this.isPrizePop;
+			console.log("=========", type);
+			this.isPrizePop = !this.isPrizePop;
 			if (type === 1) {
-                debugger
+				debugger;
 				// 单抽结果
-                this.isSingleDraw = !this.isSingleDraw;
+				this.isSingleDraw = !this.isSingleDraw;
 			} else {
 				// 连抽结果
 				this.isRepeatDraw = !this.isRepeatDraw;
@@ -237,8 +237,8 @@ export default {
 			// this.roll(6);
 			this.lottery(type, res => {
 				this.isRolling = false;
-                const { code, lottery_record_list } = res.data;
-                this.resultPrizeList = lottery_record_list
+				const { code, lottery_record_list } = res.data;
+				this.resultPrizeList = lottery_record_list;
 				let finalIndex;
 				this.initialList.forEach(item => {
 					if (
