@@ -17,7 +17,26 @@
 					 :src="`http://${resultData[0].prize.detail_url}`"
 					 alt=""
 					>
-
+					<div class="t">CONGRATULATIONS!</div>
+					<div class="prize-title">{{resultData[0].prize.title}}</div>
+					<div class="btn-wrap">
+						<span
+						 v-if="prizeType===3"
+						 @click="refuseEvent"
+						>我不想要</span>
+						<span
+						 v-if="prizeType===2 || prizeType===3"
+						 @click="receivePrize"
+						>立即领取</span>
+						<span
+						 v-if="prizeType===4"
+						 @click="receivePrize"
+						>立即使用</span>
+					</div>
+					<div
+					 class="refuse"
+					 v-if="prizeType===3"
+					>如果你不喜欢这个奖品，可以选择我不想要</div>
 				</div>
 				<div
 				 class="repeat-draw"
@@ -60,12 +79,13 @@
 // const BASE_URL = '../assets/images'
 
 export default {
-	name: "detail-mask",
+	name: "prize-pop",
 	data() {
 		return {
 			// imgsrv: this.resultData
 			// 	? `http://${resultData[0].prize.detail_url}`
 			// 	: ""
+			prizeType: this.resultData[0].prize.prize_type
 		};
 	},
 	props: {
@@ -92,6 +112,42 @@ export default {
 		dom.style.width = document.body.clientWidth + "px";
 	},
 	methods: {
+		/**
+		 * 拒绝奖品
+		 */
+		refuseEvent() {
+			// 关掉弹窗
+			this.$emit("prizePop");
+			// 传递拒签奖品
+			const refuse = "http://149.129.216.140/lottery/user/refuse";
+			this.$axios
+				.post(refuse, {
+					token: "TestToken",
+					prize_id: this.resultData[0].prize.prize_id,
+					order_code: this.resultData[0].order_code
+				})
+				.then(res => {
+					/**
+					 * 状态码
+					 * 1     ：成功
+					 * 其他  ：调用失败
+					 */
+					const { code } = res.data;
+					if (code === 1) {
+						this.$toast('成功丢弃奖品')
+                    }
+				})
+				.catch(() => {
+					this.$toast("网络繁忙，请稍后再试");
+				});
+		},
+		/**
+		 * 跳领取奖品页面
+         * prizeType:4 至优惠券中奖详情页；prizeType: 2 至实物中奖详情页；prizeType: 3 至话费中奖详情页
+		 */
+		receivePrize() {
+            
+        },
 		closeMask() {
 			this.$emit("prizePop");
 		},
@@ -186,7 +242,62 @@ export default {
 	font-size: rem(14px);
 }
 .single-draw {
-	// background: url(#{$base}/)
+	width: 100%;
+	height: rem(868px);
+	background: url(#{$base}/bg_getaward.png) 0 0 no-repeat/100%;
+	color: #fff;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	transform: translateY(8%);
+
+	img {
+		width: rem(300px);
+		height: rem(300px);
+		margin: 32.5% 0 8%;
+	}
+	.t {
+		margin: 2% 0;
+		font-size: rem(36px);
+	}
+	.prize-title {
+		font-size: rem(30px);
+		width: rem(400px);
+		white-space: wrap;
+		text-align: left;
+	}
+	.btn-wrap {
+		position: absolute;
+		bottom: -20px;
+		span {
+			display: inline-block;
+			&:first-child {
+				width: rem(234px);
+				height: rem(62px);
+				line-height: rem(62px);
+				background: url(#{$base}/btn_refuse.png) 0 0 no-repeat/100%;
+				margin-right: rem(34px);
+				font-size: rem(28px);
+				text-align: center;
+			}
+			&:nth-child(1),
+			&:nth-child(2) {
+				width: rem(296px);
+				height: rem(79px);
+				line-height: rem(79px);
+				background: url(#{$base}/btn_recieve.png) 0 0 no-repeat/100%;
+				font-size: rem(32px);
+				text-align: center;
+			}
+		}
+	}
+	.refuse {
+		position: absolute;
+		bottom: -50px;
+		font-size: rem(28px);
+	}
 }
 .repeat-draw {
 	background: #000;

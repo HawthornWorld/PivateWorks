@@ -124,16 +124,16 @@ export default {
 		/**
 		 * 中奖结果页开关
 		 */
-		prizePop(type, list) {
-			console.log("=========", type);
+		prizePop(type) {
 			this.isPrizePop = !this.isPrizePop;
 			if (type === 1) {
-				debugger;
 				// 单抽结果
-				this.isSingleDraw = !this.isSingleDraw;
-			} else {
+				this.isSingleDraw = true;
+				console.log("111");
+			} else if (type === 2 || type === 3) {
 				// 连抽结果
-				this.isRepeatDraw = !this.isRepeatDraw;
+				this.isRepeatDraw = true;
+				console.log("222");
 			}
 		},
 		/**
@@ -209,6 +209,7 @@ export default {
 				});
 		},
 		lottery(type, callback) {
+			console.log(2, this.isRolling);
 			if (this.isRolling) {
 				return;
 			}
@@ -221,13 +222,24 @@ export default {
 					lottery_type: type
 				})
 				.then(res => {
-					callback && callback(res);
+					if (res.data.code === 2004) {
+						this.$toast("积分不足，请获取更多积分");
+						return;
+					}
+					if (res.data.code === 1) {
+						console.log(1);
+						callback && callback(res);
+					}
+				})
+				.catch(e => {
+					console.log(3, e);
 				});
 		},
 		/**
 		 * 抽奖事件
 		 */
 		drawHandler(type, item, $event) {
+			$event.preventDefault();
 			let targetId = parseInt($event.target.id);
 			if (targetId !== 888 && targetId !== 666 && targetId !== 777) {
 				//调用查看奖品详情事件
@@ -236,7 +248,6 @@ export default {
 			}
 			// this.roll(6);
 			this.lottery(type, res => {
-				this.isRolling = false;
 				const { code, lottery_record_list } = res.data;
 				this.resultPrizeList = lottery_record_list;
 				let finalIndex;
@@ -247,7 +258,9 @@ export default {
 					) {
 						finalIndex = item.name;
 					}
-				});
+                });
+                console.log('finalindex',finalIndex)
+                
 				//调用动画
 				this.roll(finalIndex, () => {
 					// 弹出结果
@@ -274,7 +287,7 @@ export default {
 				});
 				currdom.classList.add("active");
 
-				currIndex = (currIndex + 1) % 8;
+                currIndex = (currIndex + 1) % 8;
 				if (currIndex === 0) {
 					currIndex = 8;
 					times++;
@@ -289,6 +302,7 @@ export default {
 						//闪两下
 						currdom.classList.add("active-ani");
 						// 抽奖结果展示
+						this.isRolling = false;
 						callback && callback();
 						return;
 					}
