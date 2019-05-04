@@ -310,13 +310,11 @@ export default {
 					name: this.usrname || ""
 				})
 				.then(res => {
-					console.log(this.$route);
 					if (res && res.code && res.code === 1) {
 						this.$toast("success");
 						this.$route.go(-1);
 					}
-				})
-				.catch(err => {});
+				});
 		}
 	},
 	components: {}

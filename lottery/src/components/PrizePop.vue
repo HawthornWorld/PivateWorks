@@ -171,9 +171,9 @@ export default {
 	// animation: spin 0.8s ease;
 }
 .title {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
+	position: relative;
+	left: 50%;
+	transform: translateX(-50%);
 	width: rem(296px);
 	height: rem(92px);
 	background: url(#{$base}/img_title_myawards.png) center center
