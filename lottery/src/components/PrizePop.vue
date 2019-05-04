@@ -1,59 +1,32 @@
 <template>
-	<div
-	 class="prize-wrapper"
-	 v-show="isPrizePop"
-	>
-		<div
-		 class="mask"
-		 @click="closeMask"
-		></div>
+	<div class="prize-wrapper" v-show="isPrizePop">
+		<div class="mask" @click="closeMask"></div>
 		<template v-if="resultData[0]">
 			<div class="cnt">
-				<div
-				 class="single-draw"
-				 v-if="isSingleDraw"
-				>
-					<img
-					 :src="`http://${resultData[0].prize.detail_url}`"
-					 alt=""
-					>
-
+				<div class="single-draw" v-if="isSingleDraw">
+					<img :src="`http://${resultData[0].prize.detail_url}`" alt>
 				</div>
-				<div
-				 class="repeat-draw"
-				 v-if="isRepeatDraw"
-				>
+				<div class="repeat-draw" v-if="isRepeatDraw">
 					<div class="title">Hadiah saya</div>
 					<div class="content-wrap">
-						<div
-						 class="content-item-wrap"
-						 v-for="(item, index) in resultData"
-						 :key="index"
-						>
+						<div class="content-item-wrap" v-for="(item, index) in resultData" :key="index">
 							<div class="item-img-wrap">
-								<img
-								 :src="'http://'+item.prize.url"
-								 alt="img"
-								 class="item-img"
-								>
+								<img :src="'http://'+item.prize.url" alt="img" class="item-img">
 							</div>
 							<div class="item-txt-wrap">
 								<span class="txt-big">{{item.prize.title}}</span>
-								<span class="txt-small">领奖时间{{formatTime(new Date(item.create_time), "yyyy-MM-dd hh:mm:ss")}}</span>
+								<span
+									class="txt-small"
+								>领奖时间{{formatTime(new Date(item.create_time), "yyyy-MM-dd hh:mm:ss")}}</span>
 							</div>
-							<div
-							 class="item-stat-btn"
-							 @click="go2order"
-							>
-								<span class="item-stat">{{btnMap(item.status)}}</span>
+							<div class="item-stat-btn" @click="go2order(item, $event)">
+								<span :class="`item-stat ${btnStyle(item.status)}`">{{btnMap(item.status)}}</span>
 							</div>
 						</div>
 					</div>
-
 				</div>
 			</div>
 		</template>
-
 	</div>
 </template>
 <script>
@@ -133,9 +106,72 @@ export default {
 			];
 			return list[stat - 1];
 		},
-		go2order(e) {
-			e.preventDefault();
-			this.$router.push("Order");
+		btnStyle(stat) {
+			let list = [
+				"get",
+				"tbd",
+				"notsend",
+				"trans",
+				"hasreceive",
+				"refuse",
+				"notuse",
+				"used"
+			];
+			return list[stat - 1];
+		},
+		go2order(item, $event) {
+			$event.preventDefault();
+			//实物
+			if (item.prize.prize_type === 3) {
+				//需要填信息
+				if (item.status === 2) {
+					this.$router.push({
+						name: "order",
+						params: {
+							ordercode: item.order_code,
+							prize: item.prize,
+							status: item.status
+						}
+					});
+				}
+				if (
+					item.status === 3 ||
+					item.status === 4 ||
+					item.status === 5 ||
+					item.status === 6
+				) {
+					this.$router.push({
+						name: "detail",
+						params: {
+							ordercode: item.order_code,
+							prize: item.prize,
+							status: item.status
+						}
+					});
+				}
+			}
+			//优惠券详情
+			if (item.prize.prize_type === 2) {
+				this.$router.push({
+					name: "coupondetail",
+					params: {
+						ordercode: item.order_code,
+						prize: item.prize,
+						status: item.status
+					}
+				});
+			}
+			//话费详情
+			if (item.prize.prize_type === 4) {
+				this.$router.push({
+					name: "phonedetail",
+					params: {
+						ordercode: item.order_code,
+						prize: item.prize,
+						status: item.status
+					}
+				});
+			}
 		}
 	}
 };
@@ -272,5 +308,21 @@ export default {
 		transform: translateY(0);
 		opacity: 1;
 	}
+}
+.item-stat.get,
+.item-stat.hasreceive,
+.item-stat.used,
+.item-stat.notused {
+	background: #803ce6;
+}
+.item-stat.tbd,
+.item-stat.notsend {
+	background: #d72ae6;
+}
+.item-stat.trans {
+	background: #deb32f;
+}
+.item-stat.refuse {
+	background: #000;
 }
 </style>
