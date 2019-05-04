@@ -1,22 +1,10 @@
 <template>
-	<div
-	 class="share-wrapper"
-	 v-show="isDetailShow"
-	>
-		<div
-		 class="mask"
-		 @click="closeMask"
-		></div>
-		<div
-		 class="cnt"
-		>
+	<div class="share-wrapper" v-show="isDetailShow">
+		<div class="mask" @click="closeMask"></div>
+		<div class="cnt">
 			<div class="header-cnt">
 				<div class="img">
-					<img
-					 :src="`http://${detailData.detail_url}`"
-					 alt="detail"
-					 class="prize-img"
-					>
+					<img :src="`http://${detailData.detail_url}`" alt="detail" class="prize-img">
 				</div>
 				<ul class="txt">
 					<li class="title">{{detailData.title}}</li>
@@ -45,7 +33,9 @@ export default {
 		},
 		detailData: {
 			type: Object,
-			default: () => {return {}}
+			default: () => {
+				return {};
+			}
 		}
 	},
 	mounted() {

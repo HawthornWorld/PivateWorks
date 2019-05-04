@@ -45,7 +45,6 @@
 
 <script>
 import logo from "../assets/images/paymangaapp.png";
-import { constants } from "crypto";
 export default {
 	name: "order",
 	data() {

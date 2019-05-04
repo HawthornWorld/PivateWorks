@@ -53,7 +53,6 @@ export default {
 					token: "TestToken"
 				})
 				.then(res => {
-					console.log(res);
 					if (res && res.data && res.data.lottery_record) {
 						this.prizeList = res.data.lottery_record;
 					}

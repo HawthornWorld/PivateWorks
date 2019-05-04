@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import lang from "../vendors/lang.js"
+import lang from "../vendors/lang.js";
 import LotteryModule from "../components/LotteryModule.vue";
 import PrizeList from "../components/PrizeList.vue";
 import BroadCast from "../components/BroadCast.vue";
@@ -19,9 +19,9 @@ export default {
 	name: "index",
 	data() {
 		return {
-            langKey: '',
-            userLang: {}
-        };
+			langKey: "",
+			userLang: {}
+		};
 	},
 	computed: {},
 	mounted() {
@@ -29,10 +29,10 @@ export default {
 		this.langKey = (navigator.language || navigator.userLanguage).slice(
 			0,
 			2
-        );
+		);
 		//切换ui至相应语言
-        this.userLang = lang[this.langKey];
-        // eg:
+		this.userLang = lang[this.langKey];
+		// eg:
 		// this.btnTxtTemp = this.userLang.btnOpen;
 	},
 	methods: {

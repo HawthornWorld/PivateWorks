@@ -45,6 +45,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import logo from "../assets/images/paymangaapp.png";
 import Clipboard from "clipboard";
 export default {
