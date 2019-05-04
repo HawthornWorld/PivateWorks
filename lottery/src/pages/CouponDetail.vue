@@ -130,6 +130,7 @@ export default {
 			location.href = "https://baidu.com";
 		},
 		copycoupon() {
+            // eslint-disable-next-line
 			let btn = new Clipboard(".copy-clip");
 		}
 	},

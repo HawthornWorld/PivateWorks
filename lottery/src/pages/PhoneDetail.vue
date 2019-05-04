@@ -112,9 +112,6 @@ export default {
 		go2shopping() {
 			location.href = "https://baidu.com";
 		},
-		copycoupon() {
-			let btn = new Clipboard(".copy-clip");
-		},
 		submit() {
 			if (this.phonenum) {
 				let api = "http://149.129.216.140/lottery/user/receiveCharge";
