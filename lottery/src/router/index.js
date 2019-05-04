@@ -23,6 +23,16 @@ const routes = [
 		path: "/detail",
 		name: "detail",
 		component: () => import("../pages/Detail.vue")
+	},
+	{
+		path: "/coupondetail",
+		name: "coupondetail",
+		component: () => import("../pages/CouponDetail.vue")
+	},
+	{
+		path: "/phonedetail",
+		name: "phonedetail",
+		component: () => import("../pages/PhoneDetail.vue")
 	}
 ];
 

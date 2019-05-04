@@ -9,7 +9,7 @@
 					<li class="title">{{prize.title}}</li>
 					<li class="desc">{{prize.detail}}</li>
 					<li class="price">{{prize.price}}</li>
-					<li>{{prize.original_price}}</li>
+					<del>{{prize.original_price}}</del>
 				</ul>
 			</div>
 		</div>
@@ -98,16 +98,6 @@ export default {
 	data() {
 		return {
 			appLogoImg: logo,
-			prize: {
-				detail: "Berlianx50",
-				detail_url: "http://149.129.219.103/prize/icon_zuanshi_2.jpg",
-				original_price: 0,
-				price: 0,
-				prize_id: 4,
-				prize_type: 1,
-				title: "Berlianx50",
-				url: "http://149.129.219.103/prize/icon_zuanshi_1.jpg"
-			},
 			showCountry: false,
 			showProv: false,
 			showCity: false,
@@ -133,7 +123,14 @@ export default {
 			detailAddr: ""
 		};
 	},
-	computed: {},
+	computed: {
+		orderCode() {
+			return this.$route.params.ordercode;
+		},
+		prize() {
+			return this.$route.params.prize;
+		}
+	},
 	watch: {
 		countryID(val, old) {
 			if (old !== -1) {
@@ -261,9 +258,14 @@ export default {
 					name: this.usrname || ""
 				})
 				.then(res => {
+					console.log(this.$route);
 					if (res && res.code && res.code === 1) {
 						this.$toast("success");
+						this.$route.go(-1);
 					}
+				})
+				.catch(err => {
+					console.log(err);
 				});
 		}
 	},

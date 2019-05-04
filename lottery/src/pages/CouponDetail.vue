@@ -9,27 +9,21 @@
 					<li class="title">{{prize.title}}</li>
 					<li class="desc">{{prize.detail}}</li>
 					<li class="price">{{prize.price}}</li>
-					<del>{{prize.original_price}}</del>
 				</ul>
 			</div>
 		</div>
 		<div class="addr-wrap">
-			<div class="deli-stat-wrap">
-				<span class="deli-no">NO.{{orderCode}}</span>
-				<span class="deli-txt">{{stat}}</span>
-			</div>
 			<div class="item-wrap">
-				<span class="item-title">快递号:</span>
-				<span type="text" class="item-input">{{express_code}}</span>
-			</div>
-			<div class="item-wrap mt9">
-				<span class="item-title">您本次使用的联系方式</span>
-				<div type="text" class="item-addr">
-					<span>ming zi</span>
-					<span>7865645273</span>
-					<span>Ampana Kota Badon Kuta Utara</span>
-					<span>babala street NO.123 , A12-402</span>
+				<span class="item-title">VOUCHER CODE:</span>
+				<div type="text" class="item-input" :style="{backgroundImage: 'url(' + couponbg + ')'}">
+					<span>{{prize.extend_1}}</span>
+					<span class="copy-clip" @click="copycoupon" :data-clipboard-text="prize.extend_1">点我复制到剪切板</span>
 				</div>
+			</div>
+			<span class="item-stat">{{stat}}</span>
+			<span class="item-txt">{{stat === "已使用" ? "获取更多代金券或折扣活动请前往" : "立即去LAZADA RAYMANGA官方店铺使用该代金券:"}}</span>
+			<div class="item-goshopping" @click="go2shopping">
+				<img :src="shopping" alt="shop">
 			</div>
 			<div class="special-tip" style="margin-bottom: 10px">
 				<div class="sp-tip-title">特别说明</div>
@@ -45,13 +39,15 @@
 
 <script>
 import logo from "../assets/images/paymangaapp.png";
-import { constants } from "crypto";
+import Clipboard from "clipboard";
 export default {
-	name: "order",
+	name: "coupondetail",
 	data() {
 		return {
 			appLogoImg: logo,
-			express_code: ""
+			express_code: "",
+			couponbg: require("../assets/images/couponbg.png"),
+			shopping: require("../assets/images/goshopping.png"),
 		};
 	},
 	computed: {
@@ -59,6 +55,7 @@ export default {
 			return this.$route.params.ordercode;
 		},
 		prize() {
+			console.log(this.$route.params.prize);
 			return this.$route.params.prize;
 		},
 		stat() {
@@ -123,12 +120,18 @@ export default {
 					} else if (code === 2005) {
 						this.$toast("暂无物流详情");
 					} else {
-						this.$toast("获取数据失败");
+						// this.$toast("获取数据失败");
 					}
 				})
 				.catch(() => {
 					this.$toast("网络繁忙，请稍后再试");
 				});
+		},
+		go2shopping() {
+			location.href = "https://baidu.com";
+		},
+		copycoupon() {
+			let btn = new Clipboard(".copy-clip");
 		}
 	},
 	components: {}
@@ -206,19 +209,20 @@ export default {
 .item-input {
 	margin-left: 0.275rem;
 	margin-right: 0.25rem; /* 25/100 */
-	height: 39px;
+	height: 60px;
 	background: #e7e7e7;
 	border-radius: 3px;
 	margin-top: 6px;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	font-family: AdobeHeitiStd-Regular;
-	font-size: 15px;
+	font-size: 24px;
 	font-weight: normal;
 	font-stretch: normal;
 	letter-spacing: 2px;
-	color: #0a0a0a;
+	color: #121212;
 }
 .item-addr {
 	margin-left: 0.275rem;
@@ -312,5 +316,48 @@ export default {
 	width: rem(300px);
 	height: rem(300px);
 	max-width: rem(300px);
+}
+.item-stat {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: AdobeHeitiStd-Regular;
+	font-size: 12px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 1px;
+	color: #ff000c;
+	padding-top: 10px;
+}
+.item-txt {
+	font-family: AdobeHeitiStd-Regular;
+	font-size: 12px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 1px;
+	color: #000000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 33px;
+}
+.item-goshopping {
+	width: 100%;
+	height: 80px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+}
+.item-goshopping > img {
+	max-height: 80px;
+}
+.copy-clip {
+	font-family: AdobeHeitiStd-Regular;
+	font-size: 12px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 1px;
+	color: #5b5b5b;
 }
 </style>

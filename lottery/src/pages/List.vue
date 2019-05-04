@@ -17,7 +17,7 @@
 					<span class="txt-big">{{item.prize.title}}</span>
 					<span class="txt-small">领奖时间{{formatTime(new Date(item.create_time), "yyyy-MM-dd hh:mm:ss")}}</span>
 				</div>
-				<div class="item-stat-btn" @click="go2order">
+				<div class="item-stat-btn" @click="go2order(item,$event)">
 					<span class="item-stat">{{btnMap(item.status)}}</span>
 				</div>
 			</div>
@@ -69,6 +69,7 @@ export default {
 								element.prize.prize_type === 3)
 						) {
 							//待填写信息，运输中，待发货
+							console.log(element);
 							if (
 								element.status === 2 ||
 								element.status === 3 ||
@@ -141,9 +142,59 @@ export default {
 			];
 			return list[stat - 1];
 		},
-		go2order(e) {
-			e.preventDefault();
-			this.$router.push("Order");
+		go2order(item, $event) {
+			$event.preventDefault();
+			//实物
+			if (item.prize.prize_type === 3) {
+				//需要填信息
+				if (item.status === 2) {
+					this.$router.push({
+						name: "order",
+						params: {
+							ordercode: item.order_code,
+							prize: item.prize,
+							status: item.status
+						}
+					});
+				}
+				if (
+					item.status === 3 ||
+					item.status === 4 ||
+					item.status === 5 ||
+					item.status === 6
+				) {
+					this.$router.push({
+						name: "detail",
+						params: {
+							ordercode: item.order_code,
+							prize: item.prize,
+							status: item.status
+						}
+					});
+				}
+			}
+			//优惠券详情
+			if (item.prize.prize_type === 2) {
+				this.$router.push({
+					name: "coupondetail",
+					params: {
+						ordercode: item.order_code,
+						prize: item.prize,
+						status: item.status
+					}
+				});
+            }
+            //话费详情
+			if (item.prize.prize_type === 4) {
+				this.$router.push({
+					name: "phonedetail",
+					params: {
+						ordercode: item.order_code,
+						prize: item.prize,
+						status: item.status
+					}
+				});
+			}
 		}
 	},
 	components: {}
@@ -195,10 +246,13 @@ export default {
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 .contend-item-wrap {
 	width: 100%;
 	height: 62px;
+	min-height: 62px;
 	margin: 10px 0 0 0;
 	border-bottom: 1px dashed #fff;
 	display: flex;

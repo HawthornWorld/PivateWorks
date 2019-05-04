@@ -9,28 +9,29 @@
 					<li class="title">{{prize.title}}</li>
 					<li class="desc">{{prize.detail}}</li>
 					<li class="price">{{prize.price}}</li>
-					<del>{{prize.original_price}}</del>
 				</ul>
 			</div>
 		</div>
 		<div class="addr-wrap">
-			<div class="deli-stat-wrap">
-				<span class="deli-no">NO.{{orderCode}}</span>
-				<span class="deli-txt">{{stat}}</span>
+			<div v-if="status!==2">
+				<div class="deli-stat-wrap">
+					<span class="deli-no">NO.{{orderCode}}</span>
+					<span class="deli-txt">{{stat}}</span>
+				</div>
+				<span class="charge-num">您本次充值话费的电话号码：</span>
+				<span type="text" class="item-input">{{phonenum}}</span>
 			</div>
-			<div class="item-wrap">
-				<span class="item-title">快递号:</span>
-				<span type="text" class="item-input">{{express_code}}</span>
-			</div>
-			<div class="item-wrap mt9">
-				<span class="item-title">您本次使用的联系方式</span>
-				<div type="text" class="item-addr">
-					<span>ming zi</span>
-					<span>7865645273</span>
-					<span>Ampana Kota Badon Kuta Utara</span>
-					<span>babala street NO.123 , A12-402</span>
+
+			<div v-if="status===2">
+				<div class="item-wrap mt9">
+					<span class="item-title">请输入要充值话费的电话号码</span>
+					<input type="number" class="item-input" v-model="phonenum">
+				</div>
+				<div class="btn-wrap">
+					<button class="submit-btn" @click="submit">提交</button>
 				</div>
 			</div>
+
 			<div class="special-tip" style="margin-bottom: 10px">
 				<div class="sp-tip-title">特别说明</div>
 				<span class="sp-tip-item">1.若因地址不详,联系号码错误,停机等个人原因导致快递多次配送不成功,延期退回后我们将不再进行二次发货,非质量问题不退换,敬请谅解;</span>
@@ -45,13 +46,16 @@
 
 <script>
 import logo from "../assets/images/paymangaapp.png";
-import { constants } from "crypto";
+import Clipboard from "clipboard";
 export default {
-	name: "order",
+	name: "coupondetail",
 	data() {
 		return {
 			appLogoImg: logo,
-			express_code: ""
+			couponbg: require("../assets/images/couponbg.png"),
+			shopping: require("../assets/images/goshopping.png"),
+			phonenum: "",
+			status: this.$route.params.status
 		};
 	},
 	computed: {
@@ -93,42 +97,40 @@ export default {
 		}
 	},
 	mounted() {
-		if (this.$route.params.status !== 3) {
-			this.fetchRecordDetail();
-		} else if (this.$route.params.status === 3) {
-			this.express_code = "等待发货";
-		}
+		let phoneapi = "http://149.129.216.140/lottery/user/getChargeDetail";
+		this.$axios
+			.post(phoneapi, {
+				token: "testToken",
+				order_code: this.orderCode
+			})
+			.then(res => {
+				this.phonenum = res.data.phone;
+			});
 	},
 	methods: {
-		/**
-		 * 获取物流详情
-		 */
-		fetchRecordDetail() {
-			const recordDetail =
-				"http://149.129.216.140/lottery/user/getRecordDetail";
-			this.$axios
-				.post(recordDetail, {
-					token: "TestToken",
-					order_code: this.orderCode
-				})
-				.then(res => {
-					/**
-					 * 状态码
-					 * 1     ：成功
-					 * 其他  ：调用失败
-					 */
-					const { code } = res;
-					if (code === 1) {
-						this.express_code = res.data.express_code;
-					} else if (code === 2005) {
-						this.$toast("暂无物流详情");
-					} else {
-						this.$toast("获取数据失败");
-					}
-				})
-				.catch(() => {
-					this.$toast("网络繁忙，请稍后再试");
-				});
+		go2shopping() {
+			location.href = "https://baidu.com";
+		},
+		copycoupon() {
+			let btn = new Clipboard(".copy-clip");
+		},
+		submit() {
+			if (this.phonenum) {
+				let api = "http://149.129.216.140/lottery/user/receiveCharge";
+				this.$axios
+					.post(api, {
+						token: "testToken",
+						order_code: this.orderCode,
+						phone: this.phonenum
+					})
+					.then(res => {
+						if (res && res.code === 1) {
+							this.$toast("充值成功");
+						}
+					});
+			} else {
+				this.$toast("请输入手机号");
+			}
 		}
 	},
 	components: {}
@@ -202,6 +204,9 @@ export default {
 	font-stretch: normal;
 	letter-spacing: 1px;
 	color: #000000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .item-input {
 	margin-left: 0.275rem;
@@ -211,6 +216,7 @@ export default {
 	border-radius: 3px;
 	margin-top: 6px;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	font-family: AdobeHeitiStd-Regular;
@@ -218,7 +224,8 @@ export default {
 	font-weight: normal;
 	font-stretch: normal;
 	letter-spacing: 2px;
-	color: #0a0a0a;
+	color: #121212;
+	text-align: center;
 }
 .item-addr {
 	margin-left: 0.275rem;
@@ -312,5 +319,90 @@ export default {
 	width: rem(300px);
 	height: rem(300px);
 	max-width: rem(300px);
+}
+.item-stat {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: AdobeHeitiStd-Regular;
+	font-size: 12px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 1px;
+	color: #ff000c;
+	padding-top: 10px;
+}
+.item-txt {
+	font-family: AdobeHeitiStd-Regular;
+	font-size: 12px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 1px;
+	color: #000000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 33px;
+}
+.item-goshopping {
+	width: 100%;
+	height: 80px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+}
+.item-goshopping > img {
+	max-height: 80px;
+}
+.copy-clip {
+	font-family: AdobeHeitiStd-Regular;
+	font-size: 12px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 1px;
+	color: #5b5b5b;
+}
+.charge-num {
+	font-size: 12px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 1px;
+	color: #000000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 15px;
+}
+.input-phone-txt {
+	font-family: AdobeHeitiStd-Regular;
+	font-size: 12px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 1px;
+	color: #000000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.btn-wrap {
+	width: 100%;
+	height: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 25px;
+}
+.submit-btn {
+	width: 1.3rem /* 130/100 */;
+	height: 39px;
+	background: #ff6666;
+	border-radius: 20px;
+	font-family: AdobeHeitiStd-Regular;
+	font-size: 18px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 1px;
+	color: #f3e4e4;
 }
 </style>
