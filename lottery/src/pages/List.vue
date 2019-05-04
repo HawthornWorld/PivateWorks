@@ -1,47 +1,24 @@
 <template>
 	<div class="list-wrapper">
 		<div class="nav-wrap">
-			<div
-			 class="nav-item-wrap"
-			 @click="switchList(101, $event)"
-			>
-				<span
-				 class="nav-item-txt"
-				 :class="tabStyle1"
-				>未领取</span>
+			<div class="nav-item-wrap" @click="switchList(101, $event)">
+				<span class="nav-item-txt" :class="tabStyle1">未领取</span>
 			</div>
-			<div
-			 class="nav-item-wrap"
-			 @click="switchList(100, $event)"
-			>
-				<span
-				 class="nav-item-txt"
-				 :class="tabStyle2"
-				>已领取</span>
+			<div class="nav-item-wrap" @click="switchList(100, $event)">
+				<span class="nav-item-txt" :class="tabStyle2">已领取</span>
 			</div>
 		</div>
-		<div class="contend-wrap">
-			<div
-			 class="contend-item-wrap"
-			 v-for="(item, index) in focusList"
-			 :key="index"
-			>
+		<div class="contend-wrap" v-infinite-scroll="loadMore" infinite-scroll-distance="10">
+			<div class="contend-item-wrap" v-for="(item, index) in focusList" :key="index">
 				<div class="item-img-wrap">
-					<img
-					 :src="'http://'+item.prize.url"
-					 alt="img"
-					 class="item-img"
-					>
+					<img :src="'http://'+item.prize.url" alt="img" class="item-img">
 				</div>
 				<div class="item-txt-wrap">
 					<span class="txt-big">{{item.prize.title}}</span>
 					<span class="txt-small">领奖时间{{formatTime(new Date(item.create_time), "yyyy-MM-dd hh:mm:ss")}}</span>
 				</div>
-				<div
-				 class="item-stat-btn"
-				 @click="go2order(item,$event)"
-				>
-					<span class="item-stat">{{btnMap(item.status)}}</span>
+				<div class="item-stat-btn" @click="go2order(item,$event)">
+					<span :class="`item-stat ${btnStyle(item.status)}`">{{btnMap(item.status)}}</span>
 				</div>
 			</div>
 		</div>
@@ -49,6 +26,10 @@
 </template>
 
 <script>
+import Vue from "vue";
+import { InfiniteScroll } from "mint-ui";
+
+Vue.use(InfiniteScroll);
 const BTNS = {
 	//已领取
 	do: 100,
@@ -61,50 +42,13 @@ export default {
 		return {
 			getList: [],
 			notGetList: [],
-			focusTab: BTNS.do
+			focusTab: BTNS.do,
+			loading: false,
+			page: 1
 		};
 	},
 	mounted() {
-		const restapi = "http://149.129.216.140/lottery/user/getLotteryRecord";
-		this.$axios
-			.post(restapi, {
-				token: "TestToken",
-				page: 1
-			})
-			.then(res => {
-				if (res && res.data && res.data.code === 1) {
-					//未领取：实物未填写信息
-					//已领取：虚拟奖品，实物填写信息
-					let dataList = res.data.lottery_record;
-					dataList.forEach(element => {
-						//虚拟奖品
-						if (
-							element.prize &&
-							(element.prize.prize_type === 1 ||
-								element.prize.prize_type === 4)
-						) {
-							this.getList.push(element);
-						}
-						//实物奖品
-						if (
-							element.prize &&
-							(element.prize.prize_type === 2 ||
-								element.prize.prize_type === 3)
-						) {
-							//待填写信息，运输中，待发货
-							if (
-								element.status === 2 ||
-								element.status === 3 ||
-								element.status === 4
-							) {
-								this.notGetList.push(element);
-							} else {
-								this.getList.push(element);
-							}
-						}
-					});
-				}
-			});
+		this.getData(1);
 	},
 	computed: {
 		focusList() {
@@ -164,6 +108,19 @@ export default {
 			];
 			return list[stat - 1];
 		},
+		btnStyle(stat) {
+			let list = [
+				"get",
+				"tbd",
+				"notsend",
+				"trans",
+				"hasreceive",
+				"refuse",
+				"notuse",
+				"used"
+			];
+			return list[stat - 1];
+		},
 		go2order(item, $event) {
 			$event.preventDefault();
 			//实物
@@ -217,6 +174,52 @@ export default {
 					}
 				});
 			}
+		},
+		loadMore() {
+			this.getData(this.page++);
+		},
+		getData(page) {
+			const restapi =
+				"http://149.129.216.140/lottery/user/getLotteryRecord";
+			this.$axios
+				.post(restapi, {
+					token: "TestToken",
+					page: page
+				})
+				.then(res => {
+					if (res && res.data && res.data.code === 1) {
+						//未领取：实物未填写信息
+						//已领取：虚拟奖品，实物填写信息
+						let dataList = res.data.lottery_record;
+						dataList.forEach(element => {
+							//虚拟奖品
+							if (
+								element.prize &&
+								(element.prize.prize_type === 1 ||
+									element.prize.prize_type === 4)
+							) {
+								this.getList.push(element);
+							}
+							//实物奖品
+							if (
+								element.prize &&
+								(element.prize.prize_type === 2 ||
+									element.prize.prize_type === 3)
+							) {
+								//待填写信息，运输中，待发货
+								if (
+									element.status === 2 ||
+									element.status === 3 ||
+									element.status === 4
+								) {
+									this.notGetList.push(element);
+								} else {
+									this.getList.push(element);
+								}
+							}
+						});
+					}
+				});
 		}
 	},
 	components: {}
@@ -331,5 +334,21 @@ export default {
 }
 .item-img {
 	max-width: 100%;
+}
+.item-stat.get,
+.item-stat.hasreceive,
+.item-stat.used,
+.item-stat.notused {
+	background: #803ce6;
+}
+.item-stat.tbd,
+.item-stat.notsend {
+	background: #d72ae6;
+}
+.item-stat.trans {
+	background: #deb32f;
+}
+.item-stat.refuse {
+	background: #000;
 }
 </style>

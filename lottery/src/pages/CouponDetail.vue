@@ -3,11 +3,7 @@
 		<div class="header">
 			<div class="header-cnt">
 				<div class="img">
-					<img
-					 :src="prize.detail_url"
-					 alt="detail"
-					 class="prize-img"
-					>
+					<img :src="prize.detail_url" alt="detail" class="prize-img">
 				</div>
 				<ul class="txt">
 					<li class="title">{{prize.title}}</li>
@@ -19,43 +15,23 @@
 		<div class="addr-wrap">
 			<div class="item-wrap">
 				<span class="item-title">VOUCHER CODE:</span>
-				<div
-				 type="text"
-				 class="item-input"
-				 :style="{backgroundImage: 'url(' + couponbg + ')'}"
-				>
+				<div type="text" class="item-input" :style="{backgroundImage: 'url(' + couponbg + ')'}">
 					<span>{{prize.extend_1}}</span>
-					<span
-					 class="copy-clip"
-					 @click="copycoupon"
-					 :data-clipboard-text="prize.extend_1"
-					>点我复制到剪切板</span>
+					<span class="copy-clip" @click="copycoupon" :data-clipboard-text="prize.extend_1">点我复制到剪切板</span>
 				</div>
 			</div>
 			<span class="item-stat">{{stat}}</span>
 			<span class="item-txt">{{stat === "已使用" ? "获取更多代金券或折扣活动请前往" : "立即去LAZADA RAYMANGA官方店铺使用该代金券:"}}</span>
-			<div
-			 class="item-goshopping"
-			 @click="go2shopping"
-			>
-				<img
-				 :src="shopping"
-				 alt="shop"
-				>
+			<div class="item-goshopping" @click="go2shopping">
+				<img :src="shopping" alt="shop">
 			</div>
-			<div
-			 class="special-tip"
-			 style="margin-bottom: 10px"
-			>
+			<div class="special-tip" style="margin-bottom: 10px">
 				<div class="sp-tip-title">特别说明</div>
 				<span class="sp-tip-item">1.若因地址不详,联系号码错误,停机等个人原因导致快递多次配送不成功,延期退回后我们将不再进行二次发货,非质量问题不退换,敬请谅解;</span>
 				<span class="sp-tip-item">2.如有疑问可直接联系客服;</span>
 			</div>
 			<div class="app-img-wrap">
-				<img
-				 :src="appLogoImg"
-				 alt="logo"
-				>
+				<img :src="appLogoImg" alt="logo">
 			</div>
 		</div>
 	</div>
@@ -154,6 +130,7 @@ export default {
 			location.href = "https://baidu.com";
 		},
 		copycoupon() {
+			// eslint-disable-next-line
 			let btn = new Clipboard(".copy-clip");
 		}
 	},

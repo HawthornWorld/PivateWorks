@@ -45,6 +45,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import logo from "../assets/images/paymangaapp.png";
 import Clipboard from "clipboard";
 export default {
@@ -110,9 +111,6 @@ export default {
 	methods: {
 		go2shopping() {
 			location.href = "https://baidu.com";
-		},
-		copycoupon() {
-			let btn = new Clipboard(".copy-clip");
 		},
 		submit() {
 			if (this.phonenum) {

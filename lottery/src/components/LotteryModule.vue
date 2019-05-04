@@ -4,29 +4,21 @@
 			<div class="title">{{userPoint}}</div>
 			<table class="lottery-cnt">
 				<tbody>
-					<tr
-					 v-for="(row,idx) in prizeList"
-					 :key="idx"
-					>
+					<tr v-for="(row,idx) in prizeList" :key="idx">
 						<td
-						 v-for="(item,idx) in row"
-						 :class="['tditem',`item${idx}`,`prize${item.prize_id}`,`ani${item.name}`]"
-						 :key="idx"
-						 :id="item.prize_id"
-						 @click="drawHandler(1,item,$event)"
+							v-for="(item,idx) in row"
+							:class="['tditem',`item${idx}`,`prize${item.prize_id}`,`ani${item.name}`]"
+							:key="idx"
+							:id="item.prize_id"
+							@click="drawHandler(1,item,$event)"
 						>
+							<img v-if="item.prize_id !== 888" :id="item.prize_id" :src="`http://${item.url}`" alt>
 							<img
-							 v-if="item.prize_id !== 888"
-							 :id="item.prize_id"
-							 :src="`http://${item.url}`"
-							 alt=""
-							>
-							<img
-							 v-if="item.prize_id === 888"
-							 :id="item.prize_id"
-							 :src="item.url"
-							 alt=""
-							 @click="drawHandler(1,item,$event)"
+								v-if="item.prize_id === 888"
+								:id="item.prize_id"
+								:src="item.url"
+								alt
+								@click="drawHandler(1,item,$event)"
 							>
 						</td>
 					</tr>
@@ -38,36 +30,24 @@
 						<span>Tingkat kemenangan</span>
 						<span>+150%</span>
 					</div>
-					<div
-					 id="666"
-					 class="btn"
-					 @click="drawHandler(2,'',$event)"
-					></div>
+					<div id="666" class="btn" @click="drawHandler(2,'',$event)"></div>
 				</li>
 				<li class="draw-ten">
 					<div class="tip">
 						<span>Tingkat kemenangan</span>
 						<span>+150%</span>
 					</div>
-					<div
-					 id="777"
-					 class="btn"
-					 @click="drawHandler(3,'',$event)"
-					></div>
+					<div id="777" class="btn" @click="drawHandler(3,'',$event)"></div>
 				</li>
 			</ul>
 		</div>
-		<DetailMask
-		 :isDetailShow="isDetailShow"
-		 :detailData="detailData"
-		 @popDetail="popDetail"
-		></DetailMask>
+		<DetailMask :isDetailShow="isDetailShow" :detailData="detailData" @popDetail="popDetail"></DetailMask>
 		<PrizePop
-		 :isPrizePop="isPrizePop"
-		 :isSingleDraw="isSingleDraw"
-		 :isRepeatDraw="isRepeatDraw"
-		 :resultData="resultPrizeList"
-		 @prizePop="prizePop"
+			:isPrizePop="isPrizePop"
+			:isSingleDraw="isSingleDraw"
+			:isRepeatDraw="isRepeatDraw"
+			:resultData="resultPrizeList"
+			@prizePop="prizePop"
 		></PrizePop>
 	</div>
 </template>
@@ -248,7 +228,7 @@ export default {
 			}
 			// this.roll(6);
 			this.lottery(type, res => {
-				const { code, lottery_record_list } = res.data;
+				const { lottery_record_list } = res.data;
 				this.resultPrizeList = lottery_record_list;
 				let finalIndex;
 				this.initialList.forEach(item => {
@@ -276,7 +256,6 @@ export default {
 			let cycle = 2;
 			let speed = 60;
 			let times = 1;
-			let indexList = [1, 2, 3, 4, 5, 6, 7, 8];
 			let currIndex = 1;
 			let timer = null;
 			let ani = function() {
