@@ -1,6 +1,12 @@
 <template>
-	<div class="prize-wrapper" v-show="isPrizePop">
-		<div class="mask" @click="closeMask"></div>
+	<div
+	 class="prize-wrapper"
+	 v-show="isPrizePop"
+	>
+		<div
+		 class="mask"
+		 @click="closeMask"
+		></div>
 		<template v-if="resultData[0]">
 			<div class="cnt">
 				<div
@@ -32,20 +38,32 @@
 					 v-if="prizeType===3"
 					>如果你不喜欢这个奖品，可以选择我不想要</div>
 				</div>
-				<div class="repeat-draw" v-if="isRepeatDraw">
+				<div
+				 class="repeat-draw"
+				 v-if="isRepeatDraw"
+				>
 					<div class="title">Hadiah saya</div>
 					<div class="content-wrap">
-						<div class="content-item-wrap" v-for="(item, index) in resultData" :key="index">
+						<div
+						 class="content-item-wrap"
+						 v-for="(item, index) in resultData"
+						 :key="index"
+						>
 							<div class="item-img-wrap">
-								<img :src="'http://'+item.prize.url" alt="img" class="item-img">
+								<img
+								 :src="'http://'+item.prize.url"
+								 alt="img"
+								 class="item-img"
+								>
 							</div>
 							<div class="item-txt-wrap">
 								<span class="txt-big">{{item.prize.title}}</span>
-								<span
-									class="txt-small"
-								>领奖时间{{formatTime(new Date(item.create_time), "yyyy-MM-dd hh:mm:ss")}}</span>
+								<span class="txt-small">领奖时间{{formatTime(new Date(item.create_time), "yyyy-MM-dd hh:mm:ss")}}</span>
 							</div>
-							<div class="item-stat-btn" @click="go2order(item, $event)">
+							<div
+							 class="item-stat-btn"
+							 @click="go2order(item, $event)"
+							>
 								<span :class="`item-stat ${btnStyle(item.status)}`">{{btnMap(item.status)}}</span>
 							</div>
 						</div>
@@ -65,7 +83,9 @@ export default {
 			// imgsrv: this.resultData
 			// 	? `http://${resultData[0].prize.detail_url}`
 			// 	: ""
-			prizeType: this.resultData[0].prize.prize_type
+			prizeType: this.resultData[0]
+				? this.resultData[0].prize.prize_type
+				: null
 		};
 	},
 	props: {
@@ -114,8 +134,8 @@ export default {
 					 */
 					const { code } = res.data;
 					if (code === 1) {
-						this.$toast('成功丢弃奖品')
-                    }
+						this.$toast("成功丢弃奖品");
+					}
 				})
 				.catch(() => {
 					this.$toast("网络繁忙，请稍后再试");
@@ -123,11 +143,61 @@ export default {
 		},
 		/**
 		 * 跳领取奖品页面
-         * prizeType:4 至优惠券中奖详情页；prizeType: 2 至实物中奖详情页；prizeType: 3 至话费中奖详情页
+		 * prizeType:4 至优惠券中奖详情页；prizeType: 2 至话费中奖详情页；prizeType: 3 至实物中奖详情页
 		 */
 		receivePrize() {
-            
-        },
+			//优惠券详情
+			if (his.resultData.prize.prize_type === 4) {
+				this.$router.push({
+					name: "coupondetail",
+					params: {
+						ordercode: item.order_code,
+						prize: item.prize,
+						status: item.status
+					}
+				});
+			}
+			//话费详情
+			if (his.resultData.prize.prize_type === 2) {
+				this.$router.push({
+					name: "phonedetail",
+					params: {
+						ordercode: item.order_code,
+						prize: item.prize,
+						status: item.status
+					}
+				});
+			}
+			//实物
+			if (item.prize.prize_type === 3) {
+				//需要填信息
+				if (item.status === 2) {
+					this.$router.push({
+						name: "order",
+						params: {
+							ordercode: item.order_code,
+							prize: item.prize,
+							status: item.status
+						}
+					});
+				}
+				if (
+					item.status === 3 ||
+					item.status === 4 ||
+					item.status === 5 ||
+					item.status === 6
+				) {
+					this.$router.push({
+						name: "detail",
+						params: {
+							ordercode: item.order_code,
+							prize: item.prize,
+							status: item.status
+						}
+					});
+				}
+			}
+		},
 		closeMask() {
 			this.$emit("prizePop");
 		},

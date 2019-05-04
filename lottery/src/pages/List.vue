@@ -153,7 +153,7 @@ export default {
 				}
 			}
 			//优惠券详情
-			if (item.prize.prize_type === 2) {
+			if (item.prize.prize_type === 4) {
 				this.$router.push({
 					name: "coupondetail",
 					params: {
@@ -164,7 +164,7 @@ export default {
 				});
 			}
 			//话费详情
-			if (item.prize.prize_type === 4) {
+			if (item.prize.prize_type === 2) {
 				this.$router.push({
 					name: "phonedetail",
 					params: {
