@@ -53,7 +53,6 @@ export default {
 		/**
 		 * 拉取获奖记录
 		 */
-		// http://149.129.216.140/lottery/user/getLotteryRecord
 		fetchDrawRecord() {
 			const fakeRecord =
 				"http://149.129.216.140/lottery/common/getFakeRecord";
