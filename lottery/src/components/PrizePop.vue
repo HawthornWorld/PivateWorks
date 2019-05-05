@@ -1,69 +1,33 @@
 <template>
-	<div
-	 class="prize-wrapper"
-	 v-show="isPrizePop"
-	>
-		<div
-		 class="mask"
-		 @click="closeMask"
-		></div>
+	<div class="prize-wrapper" v-show="isPrizePop">
+		<div class="mask" @click="closeMask"></div>
 		<template v-if="resultData[0]">
 			<div class="cnt">
-				<div
-				 class="single-draw"
-				 v-if="isSingleDraw"
-				>
-					<img
-					 :src="`http://${resultData[0].prize.detail_url}`"
-					 alt=""
-					>
+				<div class="single-draw" v-if="isSingleDraw">
+					<img :src="`http://${resultData[0].prize.detail_url}`" alt>
 					<div class="t">CONGRATULATIONS!</div>
 					<div class="prize-title">{{resultData[0].prize.title}}</div>
 					<div class="btn-wrap">
-						<span
-						 v-if="prizeType===3"
-						 @click="refuseEvent"
-						>我不想要</span>
-						<span
-						 v-if="prizeType===2 || prizeType===3"
-						 @click="receivePrize"
-						>立即领取</span>
-						<span
-						 v-if="prizeType===4"
-						 @click="receivePrize"
-						>立即使用</span>
+						<span v-if="prizeType===3" @click="refuseEvent">我不想要</span>
+						<span v-if="prizeType===2 || prizeType===3" @click="receivePrize">立即领取</span>
+						<span v-if="prizeType===4" @click="receivePrize">立即使用</span>
 					</div>
-					<div
-					 class="refuse"
-					 v-if="prizeType===3"
-					>如果你不喜欢这个奖品，可以选择我不想要</div>
+					<div class="refuse" v-if="prizeType===3">如果你不喜欢这个奖品，可以选择我不想要</div>
 				</div>
-				<div
-				 class="repeat-draw"
-				 v-if="isRepeatDraw"
-				>
+				<div class="repeat-draw" v-if="isRepeatDraw">
 					<div class="title">Hadiah saya</div>
 					<div class="content-wrap">
-						<div
-						 class="content-item-wrap"
-						 v-for="(item, index) in resultData"
-						 :key="index"
-						>
+						<div class="content-item-wrap" v-for="(item, index) in resultData" :key="index">
 							<div class="item-img-wrap">
-								<img
-								 :src="'http://'+item.prize.url"
-								 alt="img"
-								 class="item-img"
-								>
+								<img :src="'http://'+item.prize.url" alt="img" class="item-img">
 							</div>
 							<div class="item-txt-wrap">
 								<span class="txt-big">{{item.prize.title}}</span>
-								<span class="txt-small">领奖时间{{formatTime(new Date(item.create_time), "yyyy-MM-dd hh:mm:ss")}}</span>
+								<span
+									class="txt-small"
+								>领奖时间{{formatTime(new Date(item.create_time), "yyyy-MM-dd hh:mm:ss")}}</span>
 							</div>
-							<div
-							 class="item-stat-btn"
-							 @click="go2order(item, $event)"
-							>
+							<div class="item-stat-btn" @click="go2order(item, $event)">
 								<span :class="`item-stat ${btnStyle(item.status)}`">{{btnMap(item.status)}}</span>
 							</div>
 						</div>
@@ -146,8 +110,9 @@ export default {
 		 * prizeType:4 至优惠券中奖详情页；prizeType: 2 至话费中奖详情页；prizeType: 3 至实物中奖详情页
 		 */
 		receivePrize() {
+			let item = this.resultData[0];
 			//优惠券详情
-			if (his.resultData.prize.prize_type === 4) {
+			if (item.prize.prize_type === 4) {
 				this.$router.push({
 					name: "coupondetail",
 					params: {
@@ -158,7 +123,7 @@ export default {
 				});
 			}
 			//话费详情
-			if (his.resultData.prize.prize_type === 2) {
+			if (item.prize.prize_type === 2) {
 				this.$router.push({
 					name: "phonedetail",
 					params: {

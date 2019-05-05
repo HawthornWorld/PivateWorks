@@ -109,11 +109,9 @@ export default {
 			if (type === 1) {
 				// 单抽结果
 				this.isSingleDraw = true;
-				console.log("111");
 			} else if (type === 2 || type === 3) {
 				// 连抽结果
 				this.isRepeatDraw = true;
-				console.log("222");
 			}
 		},
 		/**
@@ -189,7 +187,6 @@ export default {
 				});
 		},
 		lottery(type, callback) {
-			console.log(2, this.isRolling);
 			if (this.isRolling) {
 				return;
 			}
@@ -207,12 +204,8 @@ export default {
 						return;
 					}
 					if (res.data.code === 1) {
-						console.log(1);
 						callback && callback(res);
 					}
-				})
-				.catch(e => {
-					console.log(3, e);
 				});
 		},
 		/**
@@ -233,14 +226,11 @@ export default {
 				let finalIndex;
 				this.initialList.forEach(item => {
 					if (
-						item.prize_id ===
-						lottery_record_list[0].prize.prize_id
+						item.prize_id === lottery_record_list[0].prize.prize_id
 					) {
 						finalIndex = item.name;
 					}
-                });
-                console.log('finalindex',finalIndex)
-                
+				});
 				//调用动画
 				this.roll(finalIndex, () => {
 					// 弹出结果
@@ -266,7 +256,7 @@ export default {
 				});
 				currdom.classList.add("active");
 
-                currIndex = (currIndex + 1) % 8;
+				currIndex = (currIndex + 1) % 8;
 				if (currIndex === 0) {
 					currIndex = 8;
 					times++;
