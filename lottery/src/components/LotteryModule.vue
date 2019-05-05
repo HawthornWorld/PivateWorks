@@ -105,6 +105,10 @@ export default {
 		 * 中奖结果页开关
 		 */
 		prizePop(type) {
+			if (type === undefined) {
+				this.isSingleDraw = false;
+				this.isRepeatDraw = false;
+			}
 			this.isPrizePop = !this.isPrizePop;
 			if (type === 1) {
 				// 单抽结果
@@ -243,12 +247,13 @@ export default {
 		 * stopIndex 停止位置
 		 */
 		roll(stopIndex, callback) {
+			let self = this;
 			let cycle = 2;
 			let speed = 60;
 			let times = 1;
 			let currIndex = 1;
 			let timer = null;
-			let ani = function() {
+			let ani = () => {
 				let currdom = document.querySelector(`.ani${currIndex}`);
 				let alldom = document.querySelectorAll("tbody .tditem");
 				alldom.forEach(function(item) {
@@ -266,12 +271,19 @@ export default {
 					speed += 1 * (times - cycle);
 				}
 				if (times > cycle + 3) {
-					if (currIndex === stopIndex + 1) {
+					if (currIndex === stopIndex) {
 						clearTimeout(timer);
 						//闪两下
+						currdom = document.querySelector(
+							`.ani${currIndex}`
+						);
+						alldom.forEach(function(item) {
+							item.classList.remove("active");
+						});
+						currdom.classList.add("active");
 						currdom.classList.add("active-ani");
 						// 抽奖结果展示
-						this.isRolling = false;
+						self.isRolling = false;
 						callback && callback();
 						return;
 					}
