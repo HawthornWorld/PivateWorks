@@ -233,8 +233,8 @@ export default {
 				let finalIndex;
 				this.initialList.forEach(item => {
 					if (
-						item.prize_type ===
-						lottery_record_list[0].prize.prize_type
+						item.prize_id ===
+						lottery_record_list[0].prize.prize_id
 					) {
 						finalIndex = item.name;
 					}
