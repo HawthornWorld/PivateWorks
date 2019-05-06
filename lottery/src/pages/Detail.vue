@@ -72,7 +72,6 @@ export default {
 	},
 	computed: {},
 	mounted() {
-		console.log(cdata);
 		this.userLang = lang[this.lang];
 		this.statString = utils.getPrizeStatus(
 			this.lotteryRecord.prize.prize_type,
