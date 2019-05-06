@@ -279,7 +279,7 @@ export default {
 					speed += 1 * (times - cycle);
 				}
 				if (times > cycle + 3) {
-					if (currIndex === stopIndex + 1) {
+					if (currIndex === stopIndex) {
 						clearTimeout(timer);
 						//闪两下
 						currdom = document.querySelector(`.ani${currIndex}`);
