@@ -9,8 +9,8 @@
 				<ul class="txt">
 					<li class="title">{{detailData.title}}</li>
 					<li class="desc">{{detailData.detail}}</li>
-					<li class="price">Rp {{detailData.price}}</li>
-					<del>Rp {{detailData.original_price}}</del>
+					<li class="price">{{userLang.currencySymbol}} {{price}}</li>
+					<del class="money">{{userLang.currencySymbol}} {{original_price}}</del>
 				</ul>
 			</div>
 		</div>
@@ -18,12 +18,15 @@
 </template>
 <script>
 // const BASE_URL = '../assets/images'
+import utils from "../vendors/util.js";
 
 export default {
 	name: "detail-mask",
 	data() {
 		return {
 			//   isShareShow: false,
+			price:"",
+			original_price:""
 		};
 	},
 	props: {
@@ -36,12 +39,26 @@ export default {
 			default: () => {
 				return {};
 			}
+		},
+		userLang: {
+			type: Object,
+			// eslint-disable-next-line
+			default: {}
 		}
 	},
 	mounted() {
 		//动态设置fixed元素的宽度
 		let dom = document.getElementsByClassName("share-wrapper")[0];
 		dom.style.width = document.body.clientWidth + "px";
+	},
+	watch: {
+		// eslint-disable-next-line
+		detailData(newVal, oldVal) {
+			if (newVal) {
+				this.price = utils.formatNumber(this.detailData.price/100.00,2,this.userLang.currencySeparator,this.userLang.currencyPoint);
+				this.original_price = utils.formatNumber(this.detailData.original_price/100.00,2,this.userLang.currencySeparator,this.userLang.currencyPoint);
+			}
+		}
 	},
 	methods: {
 		closeMask() {

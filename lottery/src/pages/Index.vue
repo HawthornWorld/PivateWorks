@@ -2,9 +2,9 @@
 	<div class="index-wrapper">
 		<div class="banner"></div>
 		<BroadCast :userLang="userLang" class="broadcast"></BroadCast>
-		<LotteryModule></LotteryModule>
-		<PrizeList></PrizeList>
-		<Rule></Rule>
+		<LotteryModule :userLang="userLang" :token="token"></LotteryModule>
+		<PrizeList :userLang="userLang" :token="token"></PrizeList>
+		<Rule :userLang="userLang"></Rule>
 	</div>
 </template>
 
@@ -14,24 +14,19 @@ import LotteryModule from "../components/LotteryModule.vue";
 import PrizeList from "../components/PrizeList.vue";
 import BroadCast from "../components/BroadCast.vue";
 import Rule from "../components/Rule.vue";
-
+import utils from "../vendors/util.js"
 export default {
 	name: "index",
 	data() {
 		return {
-			langKey: "",
+			token : utils.getQuery("token"),
+			lang : utils.getQuery("lang"),
 			userLang: {}
 		};
 	},
 	computed: {},
 	mounted() {
-		//获取用户设备语言 包含常规浏览器和ie浏览器
-		this.langKey = (navigator.language || navigator.userLanguage).slice(
-			0,
-			2
-		);
-		//切换ui至相应语言
-		this.userLang = lang[this.langKey];
+		this.userLang = lang[this.lang];
 		// eg:
 		// this.btnTxtTemp = this.userLang.btnOpen;
 	},

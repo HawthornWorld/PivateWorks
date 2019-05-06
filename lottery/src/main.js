@@ -4,6 +4,15 @@ import router from "./router/index";
 import axios from "axios";
 import "mint-ui/lib/style.css";
 import { Toast } from "mint-ui";
+import VueAnalytics from 'vue-analytics'
+
+Vue.use(VueAnalytics, {
+	id: 'UA-120160055-4',
+	router,
+	autoTracking: {
+		pageviewOnLoad: false
+	}
+})
 
 // import 'core-js/fn/object'
 // import 'core-js/fn/array'
